@@ -71,7 +71,7 @@ export function Profile() {
                 key={key}
                 type="button"
                 onClick={() => setTheme(key as ThemeKey)}
-                className={`relative rounded-xl border p-3 text-left transition ${
+                className={`relative rounded-xl border p-3 text-left transition-[border-color,box-shadow,background-color] duration-500 ease-out ${
                   active ? 'border-[var(--color-primary)] ring-2 ring-[var(--color-primary)]/30' : 'border-[var(--color-border)]'
                 }`}
               >

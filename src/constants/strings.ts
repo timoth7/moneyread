@@ -48,6 +48,7 @@ export const strings = {
     dna: {
       title: 'Spending DNA', need20: 'Need 20+ records to generate Spending DNA', current: 'Current',
       records: 'records', generate: 'Generate DNA', updatedAt: 'Updated at', refreshHint: 'Refreshes monthly on the 1st', refresh: 'Refresh now',
+      refreshing: 'Updating…', refreshDone: 'Updated',
       dimensions: { frequency: 'Frequency', concentration: 'Concentration', timePattern: 'Time pattern', volatility: 'Volatility' },
     },
     report: {
@@ -115,6 +116,7 @@ export const strings = {
     dna: {
       title: '消费人格', need20: '累计记账满 20 笔后生成人格卡片', current: '当前', records: '笔',
       generate: '生成人格', updatedAt: '更新于', refreshHint: '每月 1 日可刷新维度', refresh: '手动刷新',
+      refreshing: '更新中…', refreshDone: '已更新',
       dimensions: { frequency: '消费频率', concentration: '集中度', timePattern: '时段', volatility: '波动' },
     },
     report: {

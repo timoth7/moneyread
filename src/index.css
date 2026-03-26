@@ -1,5 +1,67 @@
 @import "tailwindcss";
 
+/* Smooth theme transitions: registered color variables interpolate between themes */
+@property --color-primary {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #6c2bd9;
+}
+@property --color-primary-light {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #8b5cf6;
+}
+@property --color-primary-dark {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #4c1d95;
+}
+@property --color-accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #bfff00;
+}
+@property --color-background {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f5f2ff;
+}
+@property --color-surface {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ffffff;
+}
+@property --color-text {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #1a1a2e;
+}
+@property --color-text-secondary {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #6b7280;
+}
+@property --color-hot {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ff3366;
+}
+@property --color-electric {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #00d4ff;
+}
+@property --color-solar {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ffb800;
+}
+@property --color-border {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #e5e7eb;
+}
+
 :root {
   --color-primary: #6c2bd9;
   --color-primary-light: #8b5cf6;
@@ -13,6 +75,19 @@
   --color-electric: #00d4ff;
   --color-solar: #ffb800;
   --color-border: #e5e7eb;
+  transition:
+    --color-primary 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    --color-primary-light 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    --color-primary-dark 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    --color-accent 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    --color-background 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    --color-surface 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    --color-text 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    --color-text-secondary 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    --color-hot 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    --color-electric 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    --color-solar 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    --color-border 0.55s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @theme {
@@ -42,6 +117,9 @@
     font-family: var(--font-body);
     color: var(--color-mr-text);
     background: var(--color-mr-bg);
+    transition:
+      background-color 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.55s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   body {
@@ -49,10 +127,31 @@
     min-height: 100dvh;
     background: var(--color-background);
     color: var(--color-text);
+    transition:
+      background-color 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.55s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   #root {
     min-height: 100dvh;
+  }
+
+  /*
+   * :root 上的 CSS 变量会渐变，但子元素用 var() 算出的 background/color 若未声明 transition，仍会“瞬切”。
+   * 这里只对颜色相关属性做过渡，避免包含 transform/opacity 以免影响动效组件。
+   */
+  *,
+  *::before,
+  *::after {
+    transition-property: background-color, border-color, color, fill, stroke, outline-color, box-shadow,
+      text-decoration-color, caret-color, -webkit-text-fill-color;
+    transition-duration: 0.55s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    transition: color 0.55s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -70,8 +169,8 @@
   .mr-diagonal-texture {
     background-image: repeating-linear-gradient(
       -45deg,
-      rgba(108, 43, 217, 0.08) 0,
-      rgba(108, 43, 217, 0.08) 1px,
+      color-mix(in srgb, var(--color-primary) 14%, transparent) 0,
+      color-mix(in srgb, var(--color-primary) 14%, transparent) 1px,
       transparent 1px,
       transparent 12px
     );
@@ -82,7 +181,7 @@
   }
 
   .mr-bold-border-card {
-    border: 3px solid #6c2bd9;
+    border: 3px solid var(--color-primary);
     border-radius: 16px;
     position: relative;
     overflow: hidden;
@@ -95,6 +194,6 @@
     bottom: 0;
     height: 6px;
     width: 100%;
-    background: linear-gradient(90deg, #6c2bd9 0%, #bfff00 100%);
+    background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 100%);
   }
 }
