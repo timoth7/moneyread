@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #6c2bd9;
+  --color-primary-light: #8b5cf6;
+  --color-primary-dark: #4c1d95;
+  --color-accent: #bfff00;
+  --color-background: #f5f2ff;
+  --color-surface: #ffffff;
+  --color-text: #1a1a2e;
+  --color-text-secondary: #6b7280;
+  --color-hot: #ff3366;
+  --color-electric: #00d4ff;
+  --color-solar: #ffb800;
+  --color-border: #e5e7eb;
+}
+
+@theme {
+  --font-display: "Space Grotesk", "Noto Sans SC", system-ui, sans-serif;
+  --font-body: Inter, "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Space Grotesk", monospace;
+
+  --color-mr-bg: var(--color-background);
+  --color-mr-surface: var(--color-surface);
+  --color-mr-primary: var(--color-primary);
+  --color-mr-primary-light: var(--color-primary-light);
+  --color-mr-primary-dark: var(--color-primary-dark);
+  --color-mr-accent: var(--color-accent);
+  --color-mr-accent-dark: #9acd00;
+  --color-mr-hot: var(--color-hot);
+  --color-mr-electric: var(--color-electric);
+  --color-mr-solar: var(--color-solar);
+  --color-mr-text: var(--color-text);
+  --color-mr-text-secondary: var(--color-text-secondary);
+  --color-mr-text-tertiary: #9ca3af;
+  --color-mr-border: var(--color-border);
+}
+
+@layer base {
+  html {
+    @apply antialiased;
+    font-family: var(--font-body);
+    color: var(--color-mr-text);
+    background: var(--color-mr-bg);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--color-background);
+    color: var(--color-text);
+  }
+
+  #root {
+    min-height: 100dvh;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .mr-diagonal-texture {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgba(108, 43, 217, 0.08) 0,
+      rgba(108, 43, 217, 0.08) 1px,
+      transparent 1px,
+      transparent 12px
+    );
+  }
+
+  .mr-slash-card {
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+  }
+
+  .mr-bold-border-card {
+    border: 3px solid #6c2bd9;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mr-bold-border-card::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 6px;
+    width: 100%;
+    background: linear-gradient(90deg, #6c2bd9 0%, #bfff00 100%);
+  }
+}
