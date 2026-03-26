@@ -54,7 +54,7 @@ export function ReportPage() {
     <div className="px-4 pb-10 pt-[max(12px,env(safe-area-inset-top))]">
       <BackButton fallback="/profile" />
 
-      <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold text-[var(--color-text)] [transform:rotate(-2deg)]">
+      <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold text-[var(--color-text)]">
         {s.report.title}
       </h1>
 
@@ -99,7 +99,7 @@ export function ReportPage() {
             >
               MoneyRead
             </div>
-            <h2 className="mt-4 font-[family-name:var(--font-display)] text-2xl font-bold text-[var(--color-text)] [transform:rotate(-2deg)]">
+            <h2 className="mt-4 font-[family-name:var(--font-display)] text-2xl font-bold text-[var(--color-text)]">
               {data.periodLabel}
             </h2>
 

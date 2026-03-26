@@ -88,7 +88,7 @@ export function Records() {
 
   return (
     <div className="px-4 pb-6 pt-[max(12px,env(safe-area-inset-top))] md:px-8 md:pb-10 md:pt-8">
-      <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold text-[var(--color-text)] [transform:rotate(-2deg)] md:text-4xl">
+      <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold text-[var(--color-text)] md:text-4xl">
         {s.records.title}
       </h1>
 

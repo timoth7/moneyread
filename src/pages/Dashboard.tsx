@@ -75,7 +75,7 @@ export function Dashboard() {
       <header className="mb-6 flex items-end justify-between">
         <div>
           <p className="text-sm font-medium text-[var(--color-text-secondary)]">moneyread</p>
-          <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-[var(--color-text)] [transform:rotate(-2deg)] md:text-4xl">
+          <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-[var(--color-text)] md:text-4xl">
             {s.dashboard.thisMonth}
           </h1>
         </div>

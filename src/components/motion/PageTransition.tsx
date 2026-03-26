@@ -7,14 +7,11 @@ const prefersReduced =
 
 /* 避免使用 x: 100% 横向移入：父级 main 有 overflow-hidden 时，整页会被裁在视区外，表现为「全屏/宽屏下白屏」 */
 const variants = {
-  initial: prefersReduced
-    ? { opacity: 0 }
-    : { y: 16, rotate: -2, opacity: 0, scale: 0.98 },
+  initial: prefersReduced ? { opacity: 0 } : { y: 16, opacity: 0, scale: 0.98 },
   animate: prefersReduced
     ? { opacity: 1 }
     : {
         y: 0,
-        rotate: 0,
         opacity: 1,
         scale: 1,
         transition: { type: 'spring' as const, stiffness: 200, damping: 25, mass: 0.8 },
@@ -23,7 +20,6 @@ const variants = {
     ? { opacity: 0 }
     : {
         y: -12,
-        rotate: 2,
         opacity: 0,
         scale: 0.98,
         transition: { duration: 0.25, ease: 'easeInOut' as const },

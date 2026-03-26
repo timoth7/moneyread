@@ -24,7 +24,7 @@ export function AchievementsPage() {
   return (
     <div className="px-4 pb-10 pt-[max(12px,env(safe-area-inset-top))]">
       <BackButton fallback="/" />
-      <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold text-[var(--color-text)] [transform:rotate(-2deg)]">
+      <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold text-[var(--color-text)]">
         {s.achievements.title}
       </h1>
       <p className="mt-2 text-sm text-[var(--color-text-secondary)]">

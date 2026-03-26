@@ -31,8 +31,8 @@ export function MainLayout() {
   ]
   return (
     <div className="min-h-dvh w-full bg-[var(--color-background)]">
-      <div className="pointer-events-none fixed left-1/2 top-20 z-0 h-28 w-28 -translate-x-[220px] rotate-12 bg-[var(--color-primary)]/8 [clip-path:polygon(50%_0,100%_50%,50%_100%,0_50%)]" />
-      <div className="pointer-events-none fixed left-1/2 top-44 z-0 h-24 w-24 translate-x-[150px] -rotate-12 bg-[var(--color-accent)]/15 [clip-path:polygon(0_0,100%_20%,85%_100%,0_85%)]" />
+      <div className="pointer-events-none fixed left-1/2 top-20 z-0 h-28 w-28 -translate-x-[220px] bg-[var(--color-primary)]/8 [clip-path:polygon(50%_0,100%_50%,50%_100%,0_50%)]" />
+      <div className="pointer-events-none fixed left-1/2 top-44 z-0 h-24 w-24 translate-x-[150px] bg-[var(--color-accent)]/15 [clip-path:polygon(0_0,100%_20%,85%_100%,0_85%)]" />
       <div className="relative mx-auto flex min-h-dvh w-full max-w-[1280px]">
         <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 border-r border-[var(--color-border)] bg-[var(--color-background)]/90 px-5 py-6 backdrop-blur md:flex md:flex-col">
           <p className="font-[family-name:var(--font-display)] text-2xl font-bold text-[var(--color-primary)]">

@@ -125,7 +125,7 @@ function RecordSheetBody({
         transition={{ type: 'spring', stiffness: 320, damping: 32 }}
       >
         <div className="flex items-center justify-between border-b border-[var(--color-border)] px-5 py-4">
-          <h2 className="font-[family-name:var(--font-display)] text-xl font-bold tracking-tight text-[var(--color-text)] [transform:rotate(-2deg)]">
+          <h2 className="font-[family-name:var(--font-display)] text-xl font-bold tracking-tight text-[var(--color-text)]">
             {title}
           </h2>
           <button

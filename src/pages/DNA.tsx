@@ -38,7 +38,7 @@ export function DNAPage() {
     <div className="px-4 pb-10 pt-[max(12px,env(safe-area-inset-top))]">
       <BackButton fallback="/profile" />
 
-      <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold text-[var(--color-text)] [transform:rotate(-3deg)]">
+      <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold text-[var(--color-text)]">
         {s.dna.title}
       </h1>
 
@@ -70,7 +70,7 @@ export function DNAPage() {
             transition={{ type: 'spring', stiffness: 380, damping: 28 }}
           >
             <p className="text-center text-5xl">{dna.emoji}</p>
-            <h2 className="mt-4 text-center font-[family-name:var(--font-display)] text-xl font-bold leading-tight text-[var(--color-text)] [transform:rotate(-2deg)]">
+            <h2 className="mt-4 text-center font-[family-name:var(--font-display)] text-xl font-bold leading-tight text-[var(--color-text)]">
               {dna.label}
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-[var(--color-text-secondary)]">{dna.description}</p>

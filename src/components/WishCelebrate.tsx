@@ -60,7 +60,7 @@ export function WishCelebrate({ wish, onClose }: Props) {
             <div className="mb-4 flex justify-center">
               <WishImage src={wish.icon} alt={wish.name} size={108} className="rounded-2xl border-2 border-white/50" />
             </div>
-            <h2 className="font-[family-name:var(--font-display)] text-3xl font-bold text-[var(--color-primary)] [transform:rotate(-3deg)]">
+            <h2 className="font-[family-name:var(--font-display)] text-3xl font-bold text-[var(--color-primary)]">
               {s.wishes.grantedTitle}
             </h2>
             <p className="mt-2 text-lg font-semibold text-[var(--color-text)]">{wish.name}</p>
