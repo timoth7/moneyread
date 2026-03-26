@@ -1,6 +1,7 @@
 import { Home, List, Target, User } from 'lucide-react'
-import { useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { Suspense, useLayoutEffect, useRef, useState } from 'react'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { RouteFallback } from '../RouteFallback'
 import { PageTransition } from '../motion/PageTransition'
 import { useAppData } from '../../hooks/useAppData'
 import { RecordSheet } from '../RecordSheet'
@@ -10,8 +11,15 @@ import { Toast } from '../ui/Toast'
 import { getStrings } from '../../constants/strings'
 
 export function MainLayout() {
+  const location = useLocation()
+  const mainScrollRef = useRef<HTMLElement>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
+
+  useLayoutEffect(() => {
+    const el = mainScrollRef.current
+    if (el) el.scrollTop = 0
+  }, [location.pathname])
   const { addRecord, pendingAchievement, clearPendingAchievement, wishJustCompleted, clearWishJustCompleted, settings } =
     useAppData()
   const s = getStrings(settings.language)
@@ -56,10 +64,15 @@ export function MainLayout() {
           </button>
         </aside>
 
-        <main className="relative min-h-0 flex-1 overflow-hidden pb-[calc(64px+env(safe-area-inset-bottom))] md:pb-8">
-          <PageTransition>
-            <Outlet />
-          </PageTransition>
+        <main
+          ref={mainScrollRef}
+          className="relative min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto pb-[calc(64px+env(safe-area-inset-bottom))] md:pb-8"
+        >
+          <Suspense fallback={<RouteFallback />}>
+            <PageTransition>
+              <Outlet />
+            </PageTransition>
+          </Suspense>
         </main>
       </div>
 

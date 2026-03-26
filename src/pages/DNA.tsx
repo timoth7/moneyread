@@ -88,7 +88,6 @@ export function DNAPage() {
             type="button"
             disabled={busy}
             onClick={runRefresh}
-            layout
             className={`mt-6 flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[var(--color-primary)] py-3 font-semibold text-[var(--color-primary)] transition-[box-shadow,ring] duration-300 disabled:cursor-wait disabled:opacity-90 ${
               showDone ? 'ring-4 ring-[var(--color-primary)]/25' : 'ring-0'
             }`}
