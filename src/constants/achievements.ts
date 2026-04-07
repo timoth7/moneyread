@@ -34,3 +34,9 @@ export const achievementMap = new Map(ACHIEVEMENTS.map((a) => [a.id, a]))
 export function getAchievementName(locale: Locale, id: string): string {
   return strings[locale].achievementNames[id as keyof typeof strings.en.achievementNames] ?? id
 }
+
+export function getAchievementDescription(locale: Locale, id: string): string {
+  const pack = strings[locale].achievementDesc
+  const v = pack[id as keyof typeof pack]
+  return typeof v === 'string' ? v : ''
+}

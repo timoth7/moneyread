@@ -1,14 +1,34 @@
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import { useAppData } from '../hooks/useAppData'
 import { canGenerateDNA } from '../utils/dna-calculator'
 import { themes, type ThemeKey } from '../constants/themes'
 import { Check } from 'lucide-react'
 import { getStrings } from '../constants/strings'
+import { parseYuanInput } from '../utils/money'
 
 export function Profile() {
-  const { records, achievements, dna, settings, setTheme, setLanguage, clearAllData } = useAppData()
+  const { records, achievements, dna, settings, setTheme, setLanguage, patchSettings, clearAllData } = useAppData()
+  const [dailyLimitStr, setDailyLimitStr] = useState('')
   const unlocked = achievements.filter((a) => a.unlockedAt).length
   const s = getStrings(settings.language)
+
+  useEffect(() => {
+    const v = settings.dailySpendingLimitFen
+    if (v == null || v <= 0) setDailyLimitStr('')
+    else setDailyLimitStr(String(v / 100))
+  }, [settings.dailySpendingLimitFen])
+
+  const commitDailyLimit = () => {
+    const t = dailyLimitStr.trim()
+    if (!t) {
+      patchSettings({ dailySpendingLimitFen: null })
+      return
+    }
+    const fen = parseYuanInput(t)
+    if (fen == null || fen <= 0) patchSettings({ dailySpendingLimitFen: null })
+    else patchSettings({ dailySpendingLimitFen: fen })
+  }
 
   return (
     <div className="px-4 pb-10 pt-[max(12px,env(safe-area-inset-top))]">
@@ -95,6 +115,19 @@ export function Profile() {
             )
           })}
         </div>
+      </section>
+
+      <section className="mt-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] p-5 shadow-sm">
+        <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-[var(--color-text)]">{s.profile.dailyLimit}</h2>
+        <p className="mt-1 text-sm text-[var(--color-text-secondary)]">{s.profile.dailyLimitHint}</p>
+        <input
+          inputMode="decimal"
+          className="mt-3 w-full rounded-xl border border-[var(--color-border)] px-4 py-3 font-[family-name:var(--font-mono)] outline-none focus:border-[var(--color-primary)]"
+          placeholder={s.profile.dailyLimitPlaceholder}
+          value={dailyLimitStr}
+          onChange={(e) => setDailyLimitStr(e.target.value)}
+          onBlur={commitDailyLimit}
+        />
       </section>
 
       <section className="mt-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] p-5 shadow-sm">

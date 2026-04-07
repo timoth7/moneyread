@@ -58,8 +58,19 @@ export interface UserSettings {
   theme: 'signature' | 'light' | 'dark'
   language: 'en' | 'zh'
   monthlyBudget?: number
+  /** Daily expense cap in fen; null/undefined = off */
+  dailySpendingLimitFen?: number | null
   customCategories: CustomCategory[]
   createdAt: string
+}
+
+export interface QuickTemplate {
+  id: string
+  name: string
+  amount: number
+  type: 'expense' | 'income'
+  category: string
+  note?: string
 }
 
 export interface AppStorageShape {
@@ -68,6 +79,7 @@ export interface AppStorageShape {
   mr_achievements: Achievement[]
   mr_dna: SpendingDNA | null
   mr_settings: UserSettings
+  mr_templates: QuickTemplate[]
 }
 
 export interface AchievementUnlockEvent {

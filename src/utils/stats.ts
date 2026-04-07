@@ -17,6 +17,14 @@ export function prevMonthBounds(d = new Date()) {
   return { start, end }
 }
 
+export function sumExpenseOnDate(records: RecordItem[], isoDate: string): number {
+  let s = 0
+  for (const r of records) {
+    if (r.type === 'expense' && r.date === isoDate) s += r.amount
+  }
+  return s
+}
+
 export function sumInMonth(
   records: RecordItem[],
   type: 'expense' | 'income',

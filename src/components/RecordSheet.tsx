@@ -12,6 +12,8 @@ interface RecordSheetProps {
   open: boolean
   onClose: () => void
   onSubmit: (data: Omit<RecordItem, 'id' | 'createdAt'>) => void
+  /** Called after a successful new submit (not used for every close path). */
+  onAfterSubmit?: (data: Omit<RecordItem, 'id' | 'createdAt'>) => void
   initial?: Partial<RecordItem> | null
   title?: string
 }
@@ -21,11 +23,13 @@ function RecordSheetBody({
   title,
   onClose,
   onSubmit,
+  onAfterSubmit,
 }: {
   initial?: Partial<RecordItem> | null
   title: string
   onClose: () => void
   onSubmit: (data: Omit<RecordItem, 'id' | 'createdAt'>) => void
+  onAfterSubmit?: (data: Omit<RecordItem, 'id' | 'createdAt'>) => void
 }) {
   const { settings } = useAppData()
   const s = getStrings(settings.language)
@@ -51,13 +55,15 @@ function RecordSheetBody({
   const handleConfirm = () => {
     const fen = parseYuanInput(amountStr)
     if (fen == null || fen === 0) return false
-    onSubmit({
+    const payload: Omit<RecordItem, 'id' | 'createdAt'> = {
       amount: fen,
       type,
       category: categorySafe,
       note: note.slice(0, 50) || undefined,
       date,
-    })
+    }
+    onSubmit(payload)
+    if (!initial?.id) onAfterSubmit?.(payload)
     return true
   }
 
@@ -264,6 +270,7 @@ export function RecordSheet({
   open,
   onClose,
   onSubmit,
+  onAfterSubmit,
   initial,
   title = undefined,
 }: RecordSheetProps) {
@@ -275,7 +282,14 @@ export function RecordSheet({
   return (
     <AnimatePresence>
       {open && (
-        <RecordSheetBody key={key} initial={initial} title={finalTitle} onClose={onClose} onSubmit={onSubmit} />
+        <RecordSheetBody
+          key={key}
+          initial={initial}
+          title={finalTitle}
+          onClose={onClose}
+          onSubmit={onSubmit}
+          onAfterSubmit={onAfterSubmit}
+        />
       )}
     </AnimatePresence>
   )

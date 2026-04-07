@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { Lock } from 'lucide-react'
-import { ACHIEVEMENTS, getAchievementName } from '../constants/achievements'
+import { ACHIEVEMENTS, getAchievementDescription, getAchievementName } from '../constants/achievements'
 import { useAppData } from '../hooks/useAppData'
 import { BackButton } from '../components/ui/BackButton'
 import { getStrings } from '../constants/strings'
@@ -32,7 +32,7 @@ export function AchievementsPage() {
       </p>
 
       <motion.div
-        className="mt-6 grid grid-cols-2 gap-3"
+        className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2"
         initial="initial"
         animate="animate"
         transition={{ staggerChildren: 0.05 }}
@@ -41,29 +41,44 @@ export function AchievementsPage() {
           const a = map.get(def.id)
           const ok = !!a?.unlockedAt
           const hidden = def.hidden && !ok
+          const name = hidden ? '???' : getAchievementName(settings.language, def.id)
+          const desc = hidden ? s.achievements.hiddenDesc : getAchievementDescription(settings.language, def.id)
           return (
             <motion.div
               key={def.id}
               variants={itemVariants}
-              className={`relative overflow-hidden rounded-2xl border-2 p-4 ${
-                ok ? 'border-[var(--color-primary)] bg-[var(--color-background)] shadow-md' : 'border-[var(--color-border)] bg-[var(--color-surface)] opacity-90'
+              className={`relative flex gap-3 rounded-2xl border-2 p-4 ${
+                ok ? 'border-[var(--color-primary)] bg-[var(--color-background)] shadow-md' : 'border-[var(--color-border)] bg-[var(--color-surface)]'
               }`}
             >
-              {!ok && (
-                <div className="absolute right-2 top-2 text-[#9CA3AF]">
-                  <Lock size={18} />
-                </div>
-              )}
-              <div className="text-3xl">{hidden ? '❓' : def.icon}</div>
-              <p className="mt-2 font-[family-name:var(--font-display)] font-bold text-[var(--color-text)]">
-                {hidden ? s.achievements.hidden : getAchievementName(settings.language, def.id)}
-              </p>
-              {ok && a?.unlockedAt && (
-                <p className="mt-1 text-[10px] text-[var(--color-text-secondary)]">
-                  {new Date(a.unlockedAt).toLocaleDateString(settings.language === 'zh' ? 'zh-CN' : 'en-US')}
+              <div className="shrink-0 text-3xl leading-none">{hidden ? '❓' : def.icon}</div>
+              <div className="min-w-0 flex-1">
+                <p className="font-[family-name:var(--font-display)] font-bold leading-snug text-[var(--color-text)]">{name}</p>
+                <p
+                  className={`mt-1 text-[12px] leading-snug ${
+                    ok ? 'text-[var(--color-text-secondary)]' : hidden ? 'text-[#9CA3AF]' : 'text-[var(--color-text-secondary)] opacity-80'
+                  }`}
+                >
+                  {desc}
                 </p>
-              )}
-              {hidden && <p className="mt-1 text-xs text-[#9CA3AF]">{s.achievements.hiddenHint}</p>}
+                {ok && a?.unlockedAt && (
+                  <p className="mt-1.5 text-[11px] text-[var(--color-text-secondary)]">
+                    {new Date(a.unlockedAt).toLocaleDateString(settings.language === 'zh' ? 'zh-CN' : 'en-US')}
+                  </p>
+                )}
+                {hidden && (
+                  <p className="mt-1 text-[11px] text-[#9CA3AF]">{s.achievements.hiddenHint}</p>
+                )}
+              </div>
+              <div className="shrink-0 self-start pt-0.5 text-[#9CA3AF]">
+                {ok ? (
+                  <span className="text-lg text-[var(--color-primary)]" aria-hidden>
+                    ✓
+                  </span>
+                ) : (
+                  <Lock size={18} aria-hidden />
+                )}
+              </div>
             </motion.div>
           )
         })}

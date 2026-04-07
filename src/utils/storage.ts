@@ -1,11 +1,15 @@
 import type {
   Achievement,
   AppStorageShape,
+  QuickTemplate,
   RecordItem,
   SpendingDNA,
   UserSettings,
   Wish,
 } from '../types'
+
+const KEY_ONBOARDING = 'mr_onboarding_complete'
+const KEY_LIMIT_WARNED = 'mr_limit_warned_date'
 
 const DEFAULT_SETTINGS = (): UserSettings => ({
   currency: 'CNY',
@@ -13,6 +17,7 @@ const DEFAULT_SETTINGS = (): UserSettings => ({
   language: 'en',
   customCategories: [],
   createdAt: new Date().toISOString(),
+  dailySpendingLimitFen: null,
 })
 
 function readJSON<T>(key: keyof AppStorageShape, fallback: T): T {
@@ -48,7 +53,13 @@ export function loadSettings(): UserSettings {
     ...defaults,
     ...parsed,
     customCategories: parsed.customCategories ?? defaults.customCategories,
+    dailySpendingLimitFen:
+      parsed.dailySpendingLimitFen === undefined ? defaults.dailySpendingLimitFen : parsed.dailySpendingLimitFen,
   }
+}
+
+export function loadTemplates(): QuickTemplate[] {
+  return readJSON('mr_templates', [])
 }
 
 export function saveRecords(r: RecordItem[]) {
@@ -69,4 +80,37 @@ export function saveDNA(d: SpendingDNA | null) {
 
 export function saveSettings(s: UserSettings) {
   localStorage.setItem('mr_settings', JSON.stringify(s))
+}
+
+export function saveTemplates(t: QuickTemplate[]) {
+  localStorage.setItem('mr_templates', JSON.stringify(t))
+}
+
+export function loadOnboardingComplete(): boolean {
+  return localStorage.getItem(KEY_ONBOARDING) === 'true'
+}
+
+export function saveOnboardingComplete() {
+  localStorage.setItem(KEY_ONBOARDING, 'true')
+}
+
+export function clearOnboardingComplete() {
+  localStorage.removeItem(KEY_ONBOARDING)
+}
+
+export function loadLimitWarnedDate(): string | null {
+  return localStorage.getItem(KEY_LIMIT_WARNED)
+}
+
+export function saveLimitWarnedDate(isoDate: string) {
+  localStorage.setItem(KEY_LIMIT_WARNED, isoDate)
+}
+
+export function clearLimitWarnedDate() {
+  localStorage.removeItem(KEY_LIMIT_WARNED)
+}
+
+export function clearAuxLocalFlags() {
+  clearOnboardingComplete()
+  clearLimitWarnedDate()
 }

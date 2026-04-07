@@ -4,7 +4,9 @@ import { useAppData } from '../hooks/useAppData'
 import { getCategoryDef, getCategoryLabel } from '../constants/categories'
 import { achievementMap, getAchievementName } from '../constants/achievements'
 import { AnimatedAmount } from '../components/motion/AnimatedAmount'
-import { dailyAvgExpense, monthBounds, prevMonthBounds, sumInMonth, topExpenseCategories } from '../utils/stats'
+import { QuickTemplates } from '../components/QuickTemplates'
+import { dailyAvgExpense, monthBounds, prevMonthBounds, sumExpenseOnDate, sumInMonth, topExpenseCategories } from '../utils/stats'
+import { toLocalISODate } from '../utils/dates'
 import { formatYuan } from '../utils/money'
 import { motion } from 'framer-motion'
 import { WishImage } from '../components/WishImage'
@@ -52,6 +54,13 @@ export function Dashboard() {
   const hour = now.getHours()
   const greeting = hour >= 5 && hour < 12 ? s.dashboard.morning : hour >= 12 && hour < 18 ? s.dashboard.afternoon : s.dashboard.evening
 
+  const todayIso = toLocalISODate(now)
+  const todayExpense = sumExpenseOnDate(records, todayIso)
+  const limitFen = settings.dailySpendingLimitFen
+  const limitActive = limitFen != null && limitFen > 0
+  const limitPct = limitActive ? Math.min(100, Math.round((todayExpense / limitFen) * 100)) : 0
+  const overLimit = limitActive && todayExpense > limitFen!
+
   const listVariants = {
     animate: { transition: { staggerChildren: 0.06 } },
   }
@@ -67,19 +76,18 @@ export function Dashboard() {
 
   return (
     <div className="px-4 pb-6 pt-[max(12px,env(safe-area-inset-top))] md:px-8 md:pb-10 md:pt-8">
-      <div className="mb-6 pt-4 md:pt-8">
+      <div className="mb-8 pt-4 md:pt-8">
         <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold text-[var(--color-text)]">{dateLabel}</h2>
         <p className="mt-1 text-base text-[var(--color-text-secondary)]">{greeting}</p>
       </div>
 
-      <header className="mb-6 flex items-end justify-between">
-        <div>
-          <p className="text-sm font-medium text-[var(--color-text-secondary)]">moneyread</p>
-          <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-[var(--color-text)] md:text-4xl">
-            {s.dashboard.thisMonth}
-          </h1>
-        </div>
+      <header className="mb-8">
+        <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-[var(--color-text)] md:text-4xl">
+          {s.dashboard.thisMonth}
+        </h1>
       </header>
+
+      <QuickTemplates />
 
       <div className="mr-slash-card relative overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-light)] p-6 text-white shadow-lg">
         <div className="mr-diagonal-texture pointer-events-none absolute inset-0" />
@@ -101,14 +109,14 @@ export function Dashboard() {
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
-        <div className="mr-bold-border-card bg-[var(--color-surface)] p-4">
+      <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 shadow-sm">
           <p className="text-xs text-[var(--color-text-secondary)]">{s.dashboard.dailyAverage}</p>
           <p className="mt-1 font-[family-name:var(--font-mono)] text-xl font-bold text-[var(--color-text)]">
             ¥{formatYuan(Math.round(dailyAvg))}
           </p>
         </div>
-        <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+        <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 shadow-sm">
           <p className="text-xs text-[var(--color-text-secondary)]">{s.dashboard.vsLastMonth}</p>
           <p
             className={`mt-1 font-[family-name:var(--font-mono)] text-xl font-bold ${
@@ -120,8 +128,23 @@ export function Dashboard() {
         </div>
       </div>
 
-      <section className="mt-6 md:grid md:grid-cols-5 md:gap-6">
-        <h2 className="mb-3 font-[family-name:var(--font-display)] text-lg font-bold text-[var(--color-text)]">
+      {limitActive && (
+        <div className="mt-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 shadow-sm">
+          <p className="text-xs font-medium text-[var(--color-text-secondary)]">{s.dashboard.dailyLimitProgress}</p>
+          <div className="mt-2 h-2 overflow-hidden rounded-full bg-[var(--color-background)]">
+            <div
+              className={`h-full rounded-full transition-colors ${overLimit ? 'bg-[var(--color-solar)]' : 'bg-[var(--color-primary)]'}`}
+              style={{ width: `${limitPct}%` }}
+            />
+          </div>
+          <p className="mt-2 font-[family-name:var(--font-mono)] text-xs text-[var(--color-text-secondary)]">
+            ¥{formatYuan(todayExpense)} / ¥{formatYuan(limitFen!)}
+          </p>
+        </div>
+      )}
+
+      <section className="mt-8 md:grid md:grid-cols-5 md:gap-6">
+        <h2 className="mb-4 font-[family-name:var(--font-display)] text-lg font-bold text-[var(--color-text)]">
           {s.dashboard.topCategories}
         </h2>
         <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] p-4 shadow-sm md:col-span-5">
@@ -161,8 +184,8 @@ export function Dashboard() {
         </div>
       </section>
 
-      <section className="mt-6 md:grid md:grid-cols-2 md:gap-6">
-        <div className="mb-3 flex items-center justify-between">
+      <section className="mt-8 md:grid md:grid-cols-2 md:gap-6">
+        <div className="mb-4 flex items-center justify-between">
           <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-[var(--color-text)]">{s.dashboard.wishProgress}</h2>
           <Link to="/wishes" className="text-sm font-semibold text-[var(--color-primary)]">
             {s.dashboard.all}
@@ -207,8 +230,8 @@ export function Dashboard() {
         </div>
       </section>
 
-      <section className="mt-6">
-        <div className="mb-3 flex items-center justify-between">
+      <section className="mt-8">
+        <div className="mb-4 flex items-center justify-between">
           <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-[var(--color-text)]">{s.dashboard.recentAchievements}</h2>
           <Link to="/achievements" className="text-sm font-semibold text-[var(--color-primary)]">
             {s.achievements.title}

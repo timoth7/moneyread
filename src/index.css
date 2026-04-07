@@ -177,23 +177,6 @@
   }
 
   .mr-slash-card {
-    clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
-  }
-
-  .mr-bold-border-card {
-    border: 3px solid var(--color-primary);
-    border-radius: 16px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .mr-bold-border-card::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 6px;
-    width: 100%;
-    background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 94%, 0 100%);
   }
 }
