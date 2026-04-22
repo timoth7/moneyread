@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MoneyRead — Individual Portfolio (CAT201TC)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400..700;1,14..32,400..700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a14;
+      --card: #13131f;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --accent: #7c3aed;
+      --lime: #beff00;
+      --cyan: #22d3ee;
+      --orange: #fb923c;
+      --green: #10b981;
+      --border: rgba(124, 58, 237, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      color-adjust: exact;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", system-ui, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.55;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.5em;
+    }
+
+    h1 {
+      font-size: 2.15rem;
+      color: var(--lime);
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      color: var(--accent);
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 0.35rem;
+      margin-bottom: 0.75rem;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      color: var(--cyan);
+      margin-top: 1.1em;
+    }
+
+    p {
+      margin: 0 0 0.85em;
+    }
+
+    ul {
+      margin: 0 0 0.85em;
+      padding-left: 1.25em;
+    }
+
+    li {
+      margin-bottom: 0.35em;
+    }
+
+    a {
+      color: var(--cyan);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    a:hover {
+      color: var(--lime);
+    }
+
+    .cover {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(2rem, 6vh, 4rem) clamp(1.25rem, 5vw, 2.5rem);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .cover::before {
+      content: "";
+      position: absolute;
+      inset: -35% -20%;
+      background:
+        radial-gradient(ellipse 55% 45% at 18% 38%, rgba(124, 58, 237, 0.38), transparent 58%),
+        radial-gradient(ellipse 50% 40% at 88% 62%, rgba(34, 211, 238, 0.12), transparent 55%),
+        radial-gradient(ellipse 35% 30% at 72% 18%, rgba(190, 255, 0, 0.09), transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .cover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(180deg, transparent 0%, rgba(10, 10, 20, 0.4) 100%),
+        repeating-linear-gradient(
+          -12deg,
+          transparent,
+          transparent 72px,
+          rgba(124, 58, 237, 0.03) 72px,
+          rgba(124, 58, 237, 0.03) 73px
+        );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .cover__inner {
+      position: relative;
+      z-index: 1;
+      max-width: 520px;
+    }
+
+    .cover__meta {
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(244, 244, 245, 0.45);
+      margin: 0 0 2.25rem;
+    }
+
+    .cover__title {
+      font-size: clamp(3rem, 11vw, 4.25rem);
+      font-weight: 700;
+      line-height: 0.95;
+      margin: 0 0 0.5rem;
+      background: linear-gradient(135deg, var(--lime) 0%, #e8ffc4 35%, var(--accent) 95%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 0 42px rgba(124, 58, 237, 0.35));
+    }
+
+    .tagline {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(1.1rem, 2.8vw, 1.45rem);
+      font-weight: 500;
+      color: var(--orange);
+      margin: 0 0 1.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .cover__rule {
+      width: min(140px, 38vw);
+      height: 3px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--lime));
+      margin: 0 0 0.25rem;
+      opacity: 0.95;
+    }
+
+    .cover__year {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: rgba(161, 161, 170, 0.85);
+      letter-spacing: 0.12em;
+    }
+
+    .section {
+      padding: 1.75rem 1.5rem 2rem;
+      max-width: 210mm;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.15rem;
+      margin: 0.85rem 0;
+    }
+
+    .card--muted {
+      border-style: dashed;
+      border-color: rgba(190, 255, 0, 0.45);
+    }
+
+    .criteria-strip {
+      font-size: 0.8rem;
+      color: var(--muted);
+      border-left: 3px solid var(--green);
+      padding-left: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    .placeholder {
+      border: 2px dashed rgba(251, 146, 60, 0.75);
+      background: rgba(19, 19, 31, 0.85);
+      border-radius: 8px;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      text-align: center;
+      padding: 1.25rem 1rem;
+      margin: 1rem 0;
+      color: var(--orange);
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .placeholder--tall {
+      min-height: 200px;
+    }
+
+    .placeholder__note {
+      display: block;
+      margin-top: 0.5rem;
+      font-family: "Inter", sans-serif;
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    .grid-2 {
+      display: grid;
+      gap: 1rem;
+    }
+
+    @media (min-width: 640px) {
+      .grid-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 1.25rem;
+      border-left: 2px solid var(--accent);
+      margin: 1rem 0;
+    }
+
+    .timeline__item {
+      position: relative;
+      padding-bottom: 1.1rem;
+      padding-left: 0.5rem;
+    }
+
+    .timeline__item::before {
+      content: "";
+      position: absolute;
+      left: -1.46rem;
+      top: 0.35rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--lime);
+      box-shadow: 0 0 0 3px var(--bg);
+    }
+
+    .timeline__date {
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 600;
+      color: var(--lime);
+      font-size: 0.85rem;
+    }
+
+    .highlight {
+      color: var(--lime);
+    }
+
+    .footer-note {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ----- Print: A4, dark bg, page breaks ----- */
+    @page {
+      size: A4;
+      margin: 14mm 12mm;
+    }
+
+    @media print {
+      html {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+
+      body {
+        background: var(--bg) !important;
+        color: var(--text) !important;
+        font-size: 10pt;
+      }
+
+      a {
+        color: var(--cyan) !important;
+        text-decoration: underline !important;
+      }
+
+      .cover {
+        min-height: auto;
+        padding-top: 0;
+        page-break-after: always;
+      }
+
+      .cover__title {
+        background: none !important;
+        -webkit-background-clip: border-box !important;
+        background-clip: border-box !important;
+        color: var(--lime) !important;
+        filter: none !important;
+      }
+
+      .cover::before,
+      .cover::after {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      .section {
+        padding: 0;
+        max-width: 100%;
+      }
+
+      .section--page {
+        page-break-before: always;
+        break-before: page;
+      }
+
+      .section--avoid-break {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      .card {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      .timeline__item {
+        page-break-inside: avoid;
+      }
+
+      .placeholder {
+        page-break-inside: avoid;
+        min-height: 120px;
+      }
+    }
+
+    /* Screen-only: subtle padding for preview */
+    @media screen {
+      body {
+        padding-bottom: 3rem;
+      }
+    }
+
+    /* --- In-browser copy editor --- */
+    .pe-toolbar {
+      position: fixed;
+      z-index: 99999;
+      right: 12px;
+      bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      font-family: "Inter", system-ui, sans-serif;
+      font-size: 13px;
+    }
+
+    .pe-toolbar__main {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      max-width: min(360px, calc(100vw - 24px));
+    }
+
+    .pe-btn {
+      cursor: pointer;
+      border: 1px solid var(--accent);
+      background: var(--card);
+      color: var(--lime);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font: inherit;
+    }
+
+    .pe-btn:hover {
+      background: rgba(124, 58, 237, 0.35);
+    }
+
+    .pe-btn--primary {
+      background: rgba(124, 58, 237, 0.55);
+      color: #fff;
+    }
+
+    .pe-hint {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 10px 12px;
+      border-radius: 8px;
+      max-width: min(320px, calc(100vw - 24px));
+      line-height: 1.45;
+      display: none;
+    }
+
+    body.portfolio--editing .pe-hint {
+      display: block;
+    }
+
+    body.portfolio--editing [data-bind],
+    body.portfolio--editing li[data-array-path],
+    body.portfolio--editing .timeline__item .timeline__date,
+    body.portfolio--editing .timeline__item > p {
+      outline: 1px dashed rgba(124, 58, 237, 0.75);
+      outline-offset: 3px;
+      border-radius: 2px;
+      min-height: 1.25em;
+    }
+
+    .pe-panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 260px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+    }
+
+    body.portfolio--editing .pe-panel {
+      display: flex;
+    }
+
+    .pe-panel label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .pe-panel input[type="text"] {
+      font: inherit;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .pe-toast {
+      position: fixed;
+      z-index: 100000;
+      left: 50%;
+      bottom: 88px;
+      transform: translateX(-50%);
+      background: var(--green);
+      color: var(--bg);
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+
+    .pe-toast.pe-toast--show {
+      opacity: 1;
+    }
+
+    .pe-json-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 100001;
+      background: rgba(0, 0, 0, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .pe-json-backdrop.pe-open {
+      display: flex;
+    }
+
+    .pe-json-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: min(720px, 100%);
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 14px;
+    }
+
+    .pe-json-box textarea {
+      flex: 1;
+      min-height: 240px;
+      font-family: ui-monospace, monospace;
+      font-size: 12px;
+      line-height: 1.45;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #0a0a14;
+      color: var(--lime);
+    }
+
+    .pe-json-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pe-err {
+      color: var(--orange);
+      font-size: 12px;
+    }
+
+    @media print {
+      .pe-toolbar,
+      .pe-toast,
+      .pe-json-backdrop {
+        display: none !important;
+      }
+      body.portfolio--editing [data-bind],
+      body.portfolio--editing li[data-array-path],
+      body.portfolio--editing .timeline__item .timeline__date,
+      body.portfolio--editing .timeline__item > p {
+        outline: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!--
+    文案来源：① 页面右下角「编辑文案」在浏览器里改（保存到 localStorage）
+    ② 高级·JSON ③ 仍可直接改 DEFAULT_PORTFOLIO（脚本里）作为默认底稿
+  -->
+  <noscript>
+    <p style="margin:0;padding:1.5rem;background:#2a1020;color:#fda4af;font-family:system-ui,sans-serif;">
+      请启用 JavaScript 以从 PORTFOLIO_COPY 注入正文；或复制该对象内容填回静态 HTML。
+    </p>
+  </noscript>
+
+  <header class="cover section section--avoid-break">
+    <div class="cover__inner">
+      <p class="cover__meta" data-bind="cover.meta"></p>
+      <h1 class="cover__title" data-bind="cover.title"></h1>
+      <p class="tagline" data-bind="cover.tagline" data-html="true"></p>
+      <div class="cover__rule" aria-hidden="true"></div>
+      <p class="cover__year" data-bind="cover.year"></p>
+    </div>
+  </header>
+
+  <main>
+    <section id="overview" class="section">
+      <h2 data-bind="s1.h2" data-html="true"></h2>
+
+      <div class="criteria-strip" data-bind="s1.criteria" data-html="true"></div>
+
+      <p data-bind="s1.intro" data-html="true"></p>
+
+      <h3 data-bind="s1.h3context"></h3>
+      <p data-bind="s1.context" data-html="true"></p>
+
+      <h3 data-bind="s1.h3syllabus"></h3>
+      <ul id="bind-s1-syllabus"></ul>
+
+      <h3 data-bind="s1.h3fyp"></h3>
+      <p data-bind="s1.fyp" data-html="true"></p>
+    </section>
+
+    <section id="brief" class="section section--page">
+      <h2 data-bind="s2.h2" data-html="true"></h2>
+
+      <div class="criteria-strip" data-bind="s2.criteria" data-html="true"></div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3 data-bind="s2.gapTitle"></h3>
+          <p data-bind="s2.gapBody" data-html="true"></p>
+        </div>
+        <div class="card">
+          <h3 data-bind="s2.whoTitle"></h3>
+          <p data-bind="s2.whoBody" data-html="true"></p>
+        </div>
+      </div>
+
+      <div class="card card--muted">
+        <h3 data-bind="s2.partnerTitle"></h3>
+        <p data-bind="s2.partnerBody" data-html="true"></p>
+      </div>
+    </section>
+
+    <section id="timeline" class="section section--page">
+      <h2 data-bind="s3.h2" data-html="true"></h2>
+
+      <div class="criteria-strip" data-bind="s3.criteria" data-html="true"></div>
+
+      <div class="timeline" id="bind-timeline" aria-label="Project timeline"></div>
+    </section>
+
+    <section id="concept" class="section section--page">
+      <h2 data-bind="s4.h2" data-html="true"></h2>
+
+      <p data-bind="s4.lead"></p>
+
+      <h3 data-bind="s4.h3decisions"></h3>
+      <ul id="bind-s4-decisions"></ul>
+
+      <div class="placeholder placeholder--tall">
+        <span data-bind="s4.phGitMain"></span>
+        <span class="placeholder__note" data-bind="s4.phGitNote"></span>
+      </div>
+
+      <div class="placeholder placeholder--tall">
+        <span data-bind="s4.phSketchMain"></span>
+        <span class="placeholder__note" data-bind="s4.phSketchNote"></span>
+      </div>
+    </section>
+
+    <section id="technical" class="section section--page">
+      <h2 data-bind="s5.h2" data-html="true"></h2>
+
+      <div class="criteria-strip" data-bind="s5.criteria" data-html="true"></div>
+
+      <div class="card">
+        <h3 data-bind="s5.stackTitle"></h3>
+        <p data-bind="s5.stackBody" data-html="true"></p>
+        <p data-bind="s5.stackAi" data-html="true"></p>
+      </div>
+
+      <h3 data-bind="s5.h3shipped"></h3>
+      <ul id="bind-s5-shipped"></ul>
+
+      <h3 data-bind="s5.h3practice"></h3>
+      <p data-bind="s5.practice"></p>
+
+      <h3 data-bind="s5.h3deploy"></h3>
+      <p data-bind="s5.deploy" data-html="true"></p>
+    </section>
+
+    <section id="achievements" class="section section--page">
+      <h2 data-bind="s6.h2" data-html="true"></h2>
+
+      <ul id="bind-s6-achievements"></ul>
+
+      <div class="placeholder placeholder--tall">
+        <span data-bind="s6.phShotMain"></span>
+        <span class="placeholder__note" data-bind="s6.phShotNote"></span>
+      </div>
+
+      <div class="criteria-strip" data-bind="s6.criteria" data-html="true"></div>
+    </section>
+
+    <section id="challenges" class="section section--page">
+      <h2 data-bind="s7.h2" data-html="true"></h2>
+
+      <div class="criteria-strip" data-bind="s7.criteria" data-html="true"></div>
+
+      <div class="card">
+        <h3 data-bind="s7.c1Title"></h3>
+        <p data-bind="s7.c1Body" data-html="true"></p>
+      </div>
+
+      <div class="card">
+        <h3 data-bind="s7.c2Title"></h3>
+        <p data-bind="s7.c2Body" data-html="true"></p>
+      </div>
+
+      <div class="card">
+        <h3 data-bind="s7.c3Title"></h3>
+        <p data-bind="s7.c3Body" data-html="true"></p>
+      </div>
+
+      <div class="card">
+        <h3 data-bind="s7.c4Title"></h3>
+        <p data-bind="s7.c4Body" data-html="true"></p>
+      </div>
+
+      <h3 data-bind="s7.h3tests"></h3>
+      <p data-bind="s7.t1" data-html="true"></p>
+      <p data-bind="s7.t2" data-html="true"></p>
+      <p data-bind="s7.t3" data-html="true"></p>
+    </section>
+
+    <section id="media" class="section section--page">
+      <h2 data-bind="s8.h2" data-html="true"></h2>
+
+      <p data-bind="s8.intro" data-html="true"></p>
+
+      <div class="card">
+        <h3 data-bind="s8.h3links"></h3>
+        <ul id="bind-s8-links"></ul>
+      </div>
+
+      <div class="placeholder placeholder--tall">
+        <span data-bind="s8.phDemoMain"></span>
+        <span class="placeholder__note" data-bind="s8.phDemoNote"></span>
+      </div>
+
+      <div class="placeholder placeholder--tall">
+        <span data-bind="s8.phGitMain"></span>
+        <span class="placeholder__note" data-bind="s8.phGitNote"></span>
+      </div>
+
+      <div class="placeholder placeholder--tall">
+        <span data-bind="s8.phR1Main"></span>
+        <span class="placeholder__note" data-bind="s8.phR1Note"></span>
+      </div>
+
+      <div class="placeholder placeholder--tall">
+        <span data-bind="s8.phR2Main"></span>
+        <span class="placeholder__note" data-bind="s8.phR2Note"></span>
+      </div>
+
+      <div class="placeholder placeholder--tall">
+        <span data-bind="s8.ph3Main"></span>
+        <span class="placeholder__note" data-bind="s8.ph3Note"></span>
+      </div>
+
+      <div class="card card--muted">
+        <h3 data-bind="s8.checkTitle"></h3>
+        <ul id="bind-s8-check"></ul>
+      </div>
+    </section>
+
+    <section class="section section--page">
+      <h2 data-bind="sa.h2" data-html="true"></h2>
+      <div class="grid-2">
+        <div class="card section--avoid-break">
+          <h3 data-bind="sa.a1Title" data-html="true"></h3>
+          <p data-bind="sa.a1Body"></p>
+        </div>
+        <div class="card section--avoid-break">
+          <h3 data-bind="sa.a2Title" data-html="true"></h3>
+          <p data-bind="sa.a2Body"></p>
+        </div>
+        <div class="card section--avoid-break">
+          <h3 data-bind="sa.a3Title" data-html="true"></h3>
+          <p data-bind="sa.a3Body"></p>
+        </div>
+        <div class="card section--avoid-break">
+          <h3 data-bind="sa.a4Title" data-html="true"></h3>
+          <p data-bind="sa.a4Body"></p>
+        </div>
+      </div>
+
+      <p class="footer-note" data-bind="sa.footer" data-html="true"></p>
+    </section>
+  </main>
+
+  <div class="pe-toolbar" id="pe-toolbar">
+    <div class="pe-hint">编辑模式：直接改页面里带<strong>紫色虚线框</strong>的文字；支持简单 HTML（加粗、链接）。点「保存到本机」后即使刷新也会保留。</div>
+    <div class="pe-toolbar__main">
+      <button type="button" class="pe-btn pe-btn--primary" id="pe-toggle">编辑文案</button>
+      <button type="button" class="pe-btn" id="pe-save">保存到本机</button>
+      <button type="button" class="pe-btn" id="pe-reset">恢复默认</button>
+      <button type="button" class="pe-btn" id="pe-json-open">高级 · JSON</button>
+    </div>
+    <div class="pe-panel" id="pe-panel">
+      <label>浏览器标签栏标题
+        <input type="text" id="pe-doc-title-input" autocomplete="off" />
+      </label>
+      <span class="pe-err" id="pe-json-err"></span>
+    </div>
+  </div>
+  <div class="pe-toast" id="pe-toast" role="status">已保存</div>
+
+  <div class="pe-json-backdrop" id="pe-json-backdrop" aria-hidden="true">
+    <div class="pe-json-box">
+      <p style="margin:0;color:var(--muted);font-size:12px;">编辑完整 PORTFOLIO 数据（含列表与时间线）。语法须为合法 JSON。</p>
+      <textarea id="pe-json-textarea" spellcheck="false"></textarea>
+      <div class="pe-json-actions">
+        <button type="button" class="pe-btn" id="pe-json-cancel">取消</button>
+        <button type="button" class="pe-btn pe-btn--primary" id="pe-json-apply">应用并重绘</button>
+      </div>
+    </div>
+  </div>
+
+  <script id="portfolio-config">
+  (function () {
+    var DEFAULT_PORTFOLIO = {
+      meta: {
+        pageTitle: "MoneyRead — Individual Portfolio (CAT201TC)",
+      },
+      cover: {
+        meta: "CAT201TC · individual project · portfolio",
+        title: "MoneyRead",
+        tagline: "“Read your money.”",
+        year: "2026",
+      },
+      s1: {
+        h2: "1. Project Overview",
+        criteria:
+          "<strong>Individual coursework:</strong> solo author — concept, UI, code, deploy, user tests · Direction 3 · FYP testbed · Git from 27 Mar 2026 (Sec. 4, 6, 8).",
+        intro:
+          "<strong>MoneyRead</strong> — “Read your money.” <span class=\"highlight\">Gamified finance tracker</span> for 18–24s who skip dull budgeting UIs. No group component: deliverables above are produced by one person only.",
+        h3context: "Context",
+        context:
+          "UX gamification (e.g. Duolingo, Robinhood) + contrast-led visuals vs. default fintech blue. <strong>Cursor</strong> as co-creator → more design/UX focus (ties to FYP essay).",
+        h3syllabus: "Syllabus",
+        syllabus: [
+          "<strong>W6 Form:</strong> violet/lime/motion on a “dry” topic.",
+          "<strong>W8 Audience:</strong> students, not accountants.",
+          "<strong>W10 Data:</strong> money as visual / time-based, not spreadsheets only.",
+        ],
+        h3fyp: "FYP",
+        fyp: "<strong>Testbed</strong> for AI-assisted interactive experience → scales toward broader FYP work.",
+      },
+      s2: {
+        h2: "2. Brief &amp; External Requirement",
+        criteria: "<strong>External brief:</strong> Direction 3 — Community / Commercial.",
+        gapTitle: "Gap",
+        gapBody: "18–24s <strong>drop off</strong> traditional tools: too complex, no hook.",
+        whoTitle: "Who",
+        whoBody: "Students &amp; first-time earners, <strong>China</strong>.",
+        partnerTitle: "Partner",
+        partnerBody:
+          "<span class=\"highlight\">X3 Co-Venture</span> (XJTLU). Goal: <strong>licensable</strong> product, possible public launch.",
+      },
+      s3: {
+        h2: "3. Project Timeline",
+        criteria:
+          "<strong>PM / evidence:</strong> dated milestones · first code <strong>27 Mar 2026</strong>.",
+        timeline: [
+          { date: "20 Mar — Week 3", html: "Kickoff · one-line concept." },
+          {
+            date: "27 Mar",
+            html: "First commit · architecture, DNA, motion, wishes. <em>(Git → placeholders.)</em>",
+          },
+          { date: "2 Apr", html: "README · devlog · project notes." },
+          { date: "7 Apr", html: "Auth · daily limit · templates." },
+          { date: "7–14 Apr", html: "<strong>Test R1</strong> (WeChat)." },
+          { date: "14–21 Apr", html: "Iterate · <strong>Test R2</strong>." },
+          { date: "21 Apr", html: "WIP presentation." },
+          {
+            date: "28 May 2026 · 17:00",
+            html: "<strong>CAT201TC submission — Component 1 (Portfolio PDF)</strong> · Week 13",
+          },
+        ],
+      },
+      s4: {
+        h2: "4. Concept Development Evidence",
+        lead: "Idea → spec: features + look + tech boundaries in parallel.",
+        h3decisions: "Decisions",
+        decisions: [
+          "<strong>Violet + lime</strong> — not “bank blue”; game energy.",
+          "<strong>Space Grotesk + Inter</strong> — modern, readable.",
+          "<strong>Framer Motion</strong> — motion = feedback.",
+          "<strong>3 themes</strong> (Signature / Light / Dark).",
+          "<strong>localStorage MVP</strong> · <code>storage.ts</code> → future <strong>Supabase</strong>.",
+        ],
+        phGitMain: "[INSERT: Git commit history screenshot]",
+        phGitNote: "From 27 Mar 2026.",
+        phSketchMain: "[INSERT: Early concept sketch / mind map]",
+        phSketchNote: "Sketch or mind map.",
+      },
+      s5: {
+        h2: "5. Technical &amp; Artistic Practice",
+        criteria: "<strong>Build quality:</strong> working prototype · AI per module policy.",
+        stackTitle: "Stack",
+        stackBody:
+          "React 18 · TS · Vite · Tailwind · Framer Motion · Recharts — end-to-end by author.",
+        stackAi:
+          "<strong>Cursor</strong> — faster iteration; more time on design &amp; UX (Essay / FYP).",
+        h3shipped: "Shipped",
+        shipped: [
+          "Dashboard · income/balance · templates",
+          "Records · categories",
+          "Wishes · milestones",
+          "Spending DNA",
+          "Report Card · Achievements · 3 themes · daily limit",
+        ],
+        h3practice: "Practice",
+        practice: "Colour / motion / layout = emotional “read” of money data.",
+        h3deploy: "Deploy",
+        deploy: "<strong>Vercel</strong> + <strong>Docker</strong>.",
+      },
+      s6: {
+        h2: "6. Key Achievements",
+        achievements: [
+          'Live: <a href="https://moneyread-tan.vercel.app" target="_blank" rel="noopener noreferrer">moneyread-tan.vercel.app</a>',
+          "3 themes · DNA system · 2× WeChat tests",
+          "Docker + Vercel",
+          'Repo: <a href="https://github.com/timoth7/moneyread" target="_blank" rel="noopener noreferrer">github.com/timoth7/moneyread</a>',
+        ],
+        phShotMain: "[INSERT: App screenshots — Dashboard, Wishes, Profile]",
+        phShotNote: "Your screenshots.",
+        criteria: "<strong>Dissemination:</strong> public demo + GitHub.",
+      },
+      s7: {
+        h2: "7. Challenges &amp; Solutions",
+        criteria: "<strong>Reflection:</strong> trade-offs · tests · Git proof.",
+        c1Title: "Engagement",
+        c1Body: "<strong>→</strong> Gamify + bold look (not default fintech blue).",
+        c2Title: "Solo codebase",
+        c2Body:
+          "<strong>→</strong> <code>storage.ts</code> abstraction · modular components — kept the full stack maintainable for one developer.",
+        c3Title: "Scope",
+        c3Body: "<strong>→</strong> localStorage now · Supabase later · ship core first.",
+        c4Title: "Timeline proof",
+        c4Body: "<strong>→</strong> Git from <strong>27 Mar 2026</strong> (Sec. 8).",
+        h3tests: "Tests",
+        t1: "<strong>R1</strong> (WeChat ~7–14 Apr): flows / copy — drove UI fixes.",
+        t2: "<strong>R2</strong> (~14–21 Apr): check R1 changes.",
+        t3: "<em>Detail in Sec. 8 placeholders.</em>",
+      },
+      s8: {
+        h2: "8. Media Documentation",
+        intro:
+          "Public URLs · no login. Brief also asks for <strong>video / audio</strong> suitable for embedding in the final PDF — a screen-recorded <strong>demo walkthrough</strong> will be attached here when exported.",
+        h3links: "Links",
+        links: [
+          '<a href="https://moneyread-tan.vercel.app" target="_blank" rel="noopener noreferrer">moneyread-tan.vercel.app</a> — live app',
+          '<a href="https://github.com/timoth7/moneyread" target="_blank" rel="noopener noreferrer">github.com/timoth7/moneyread</a> — source',
+        ],
+        phDemoMain:
+          "[INSERT: Demo screen recording — walkthrough (for PDF embed or public link)]",
+        phDemoNote: "Record after feature lock; link or embed in submission PDF per brief.",
+        phGitMain: "[INSERT: Git commits — from 27 Mar 2026]",
+        phGitNote: "Semester start.",
+        phR1Main: "[INSERT: WeChat · Round 1 + short summary]",
+        phR1Note: "What changed after.",
+        phR2Main: "[INSERT: WeChat · Round 2 + short summary]",
+        phR2Note: "vs R1.",
+        ph3Main: "[INSERT: Screenshots × 3]",
+        ph3Note: "Dashboard / Wishes / Profile or DNA.",
+        checkTitle: "Andrew checklist",
+        check: [
+          "Git ≥ <strong>27 Mar 2026</strong>",
+          "2 rounds · WeChat · what shifted each time",
+        ],
+      },
+      sa: {
+        h2: "Assessment criteria (mapped)",
+        a1Title: "Conception (25%)",
+        a1Body: "Dir 3 · X3 · FYP / AI essay — Sec. 1–2, 5, 7.",
+        a2Title: "Craft (25%)",
+        a2Body: "Stack · ship · DNA — Sec. 5–6 + URLs.",
+        a3Title: "PM &amp; share (25%)",
+        a3Body: "Sec. 3 timeline · Cursor · Docker/Vercel — 5–6, 8.",
+        a4Title: "Reflect (25%)",
+        a4Body: "Sec. 7–8 · tests · scope · AI workflow.",
+        footer:
+          "CAT201TC · individual submission · due <strong>28 May 2026, 17:00</strong> · Print → PDF · <code>print-color-adjust: exact</code> · replace dashed placeholders (incl. demo video) before upload.",
+      },
+    };
+
+    var STORAGE_KEY = "moneyread-portfolio-v2";
+
+    function cloneObj(x) {
+      return JSON.parse(JSON.stringify(x));
+    }
+
+    function deepMergeDefaults(def, saved) {
+      if (!saved || typeof saved !== "object") return cloneObj(def);
+      var out = cloneObj(def);
+      (function walk(o, s) {
+        for (var k in s) {
+          if (!Object.prototype.hasOwnProperty.call(s, k)) continue;
+          if (
+            s[k] != null &&
+            typeof s[k] === "object" &&
+            !Array.isArray(s[k]) &&
+            o[k] &&
+            typeof o[k] === "object" &&
+            !Array.isArray(o[k])
+          ) {
+            walk(o[k], s[k]);
+          } else {
+            o[k] = s[k];
+          }
+        }
+      })(out, saved);
+      return out;
+    }
+
+    var PORTFOLIO_COPY = (function loadMerged() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return deepMergeDefaults(DEFAULT_PORTFOLIO, JSON.parse(raw));
+      } catch (e) {}
+      return cloneObj(DEFAULT_PORTFOLIO);
+    })();
+
+    function setByPath(obj, pathStr, value) {
+      var parts = pathStr.split(".");
+      var cur = obj;
+      for (var i = 0; i < parts.length - 1; i++) {
+        var k = parts[i];
+        if (cur[k] == null || typeof cur[k] !== "object") cur[k] = {};
+        cur = cur[k];
+      }
+      cur[parts[parts.length - 1]] = value;
+    }
+
+    function get(obj, path) {
+      return path.split(".").reduce(function (o, k) {
+        return o == null ? o : o[k];
+      }, obj);
+    }
+
+    function bindPlain(path, el) {
+      var v = get(PORTFOLIO_COPY, path);
+      if (v == null || !el) return;
+      if (el.dataset.html === "true") el.innerHTML = v;
+      else el.textContent = v;
+    }
+
+    function fillList(containerId, pathStr) {
+      var items = get(PORTFOLIO_COPY, pathStr);
+      var ul = document.getElementById(containerId);
+      if (!ul || !Array.isArray(items)) return;
+      ul.innerHTML = "";
+      items.forEach(function (html, index) {
+        var li = document.createElement("li");
+        li.innerHTML = html;
+        li.setAttribute("data-array-path", pathStr);
+        li.setAttribute("data-array-index", String(index));
+        ul.appendChild(li);
+      });
+    }
+
+    function fillTimeline() {
+      var wrap = document.getElementById("bind-timeline");
+      var rows = PORTFOLIO_COPY.s3 && PORTFOLIO_COPY.s3.timeline;
+      if (!wrap || !Array.isArray(rows)) return;
+      wrap.innerHTML = "";
+      rows.forEach(function (row, index) {
+        var item = document.createElement("div");
+        item.className = "timeline__item";
+        item.setAttribute("data-tl-index", String(index));
+        var d = document.createElement("div");
+        d.className = "timeline__date";
+        d.textContent = row.date;
+        var p = document.createElement("p");
+        p.innerHTML = row.html;
+        item.appendChild(d);
+        item.appendChild(p);
+        wrap.appendChild(item);
+      });
+    }
+
+    function bindAll() {
+      document.querySelectorAll("[data-bind]").forEach(function (el) {
+        bindPlain(el.getAttribute("data-bind"), el);
+      });
+      if (PORTFOLIO_COPY.meta && PORTFOLIO_COPY.meta.pageTitle) {
+        document.title = PORTFOLIO_COPY.meta.pageTitle;
+      }
+      fillList("bind-s1-syllabus", "s1.syllabus");
+      fillList("bind-s4-decisions", "s4.decisions");
+      fillList("bind-s5-shipped", "s5.shipped");
+      fillList("bind-s6-achievements", "s6.achievements");
+      fillList("bind-s8-links", "s8.links");
+      fillList("bind-s8-check", "s8.check");
+      fillTimeline();
+    }
+
+    function collectFromDom() {
+      document.querySelectorAll("[data-bind]").forEach(function (el) {
+        var path = el.getAttribute("data-bind");
+        if (!path) return;
+        var val = el.dataset.html === "true" ? el.innerHTML : el.textContent;
+        setByPath(PORTFOLIO_COPY, path, val);
+      });
+
+      var map = {};
+      document.querySelectorAll("li[data-array-path]").forEach(function (li) {
+        var pathStr = li.getAttribute("data-array-path");
+        var idx = parseInt(li.getAttribute("data-array-index"), 10);
+        if (!map[pathStr]) map[pathStr] = [];
+        map[pathStr][idx] = li.innerHTML;
+      });
+      Object.keys(map).forEach(function (pathStr) {
+        var arr = map[pathStr];
+        var compact = arr.map(function (x) {
+          return x == null ? "" : x;
+        });
+        setByPath(PORTFOLIO_COPY, pathStr, compact);
+      });
+
+      if (!PORTFOLIO_COPY.s3) PORTFOLIO_COPY.s3 = {};
+      if (!PORTFOLIO_COPY.s3.timeline) PORTFOLIO_COPY.s3.timeline = [];
+      document.querySelectorAll("#bind-timeline .timeline__item").forEach(function (item, index) {
+        var dEl = item.querySelector(".timeline__date");
+        var pEl = item.querySelector("p");
+        if (!dEl || !pEl) return;
+        if (!PORTFOLIO_COPY.s3.timeline[index]) PORTFOLIO_COPY.s3.timeline[index] = { date: "", html: "" };
+        PORTFOLIO_COPY.s3.timeline[index].date = dEl.textContent.trim();
+        PORTFOLIO_COPY.s3.timeline[index].html = pEl.innerHTML;
+      });
+      var tl = PORTFOLIO_COPY.s3.timeline;
+      var n = document.querySelectorAll("#bind-timeline .timeline__item").length;
+      if (tl.length > n) PORTFOLIO_COPY.s3.timeline = tl.slice(0, n);
+
+      var titleIn = document.getElementById("pe-doc-title-input");
+      if (titleIn && PORTFOLIO_COPY.meta) {
+        var tv = titleIn.value.trim();
+        if (tv) {
+          PORTFOLIO_COPY.meta.pageTitle = tv;
+          document.title = tv;
+        }
+      }
+    }
+
+    function persist() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(PORTFOLIO_COPY));
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function toast(msg) {
+      var t = document.getElementById("pe-toast");
+      if (!t) return;
+      t.textContent = msg || "已保存";
+      t.classList.add("pe-toast--show");
+      setTimeout(function () {
+        t.classList.remove("pe-toast--show");
+      }, 2200);
+    }
+
+    function setEditing(on) {
+      document.body.classList.toggle("portfolio--editing", on);
+      var titleIn = document.getElementById("pe-doc-title-input");
+      if (titleIn && PORTFOLIO_COPY.meta) {
+        titleIn.value = PORTFOLIO_COPY.meta.pageTitle || "";
+      }
+
+      document.querySelectorAll("[data-bind]").forEach(function (el) {
+        el.contentEditable = on ? "true" : "false";
+        el.style.cursor = on ? "text" : "";
+      });
+      document.querySelectorAll("li[data-array-path]").forEach(function (li) {
+        li.contentEditable = on ? "true" : "false";
+        li.style.cursor = on ? "text" : "";
+      });
+      document.querySelectorAll("#bind-timeline .timeline__date").forEach(function (dEl) {
+        dEl.contentEditable = on ? "true" : "false";
+      });
+      document.querySelectorAll("#bind-timeline .timeline__item > p").forEach(function (pEl) {
+        pEl.contentEditable = on ? "true" : "false";
+      });
+
+      var btn = document.getElementById("pe-toggle");
+      if (btn) btn.textContent = on ? "完成编辑" : "编辑文案";
+    }
+
+    var editing = false;
+
+    function syncTitleInput() {
+      var titleIn = document.getElementById("pe-doc-title-input");
+      if (titleIn && PORTFOLIO_COPY.meta) titleIn.value = PORTFOLIO_COPY.meta.pageTitle || "";
+    }
+
+    bindAll();
+    syncTitleInput();
+
+    document.getElementById("pe-toggle").addEventListener("click", function () {
+      if (editing) {
+        collectFromDom();
+        persist();
+        toast("已保存并退出编辑");
+        editing = false;
+        setEditing(false);
+      } else {
+        editing = true;
+        setEditing(true);
+      }
+    });
+
+    document.getElementById("pe-save").addEventListener("click", function () {
+      collectFromDom();
+      if (persist()) toast("已保存到本浏览器");
+      else toast("保存失败（存储已满？）");
+    });
+
+    document.getElementById("pe-reset").addEventListener("click", function () {
+      if (!confirm("确定清空本机保存的文案并恢复为页面内嵌的默认文字？")) return;
+      localStorage.removeItem(STORAGE_KEY);
+      PORTFOLIO_COPY = cloneObj(DEFAULT_PORTFOLIO);
+      bindAll();
+      syncTitleInput();
+      if (editing) setEditing(true);
+      toast("已恢复默认");
+    });
+
+    var backdrop = document.getElementById("pe-json-backdrop");
+    var textarea = document.getElementById("pe-json-textarea");
+    var errEl = document.getElementById("pe-json-err");
+
+    document.getElementById("pe-json-open").addEventListener("click", function () {
+      collectFromDom();
+      if (textarea) textarea.value = JSON.stringify(PORTFOLIO_COPY, null, 2);
+      if (errEl) errEl.textContent = "";
+      backdrop.classList.add("pe-open");
+      backdrop.setAttribute("aria-hidden", "false");
+    });
+
+    function closeJson() {
+      backdrop.classList.remove("pe-open");
+      backdrop.setAttribute("aria-hidden", "true");
+    }
+
+    document.getElementById("pe-json-cancel").addEventListener("click", closeJson);
+    backdrop.addEventListener("click", function (e) {
+      if (e.target === backdrop) closeJson();
+    });
+
+    document.getElementById("pe-json-apply").addEventListener("click", function () {
+      if (errEl) errEl.textContent = "";
+      try {
+        var parsed = JSON.parse(textarea.value);
+        PORTFOLIO_COPY = deepMergeDefaults(DEFAULT_PORTFOLIO, parsed);
+        bindAll();
+        syncTitleInput();
+        collectFromDom();
+        persist();
+        closeJson();
+        toast("JSON 已应用并保存");
+        if (editing) setEditing(true);
+      } catch (e) {
+        if (errEl) errEl.textContent = (e && e.message) || "JSON 无效";
+      }
+    });
+  })();
+  </script>
+
+</body>
+</html>
