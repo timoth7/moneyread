@@ -179,4 +179,96 @@
   .mr-slash-card {
     clip-path: polygon(0 0, 100% 0, 100% 94%, 0 100%);
   }
+
+  /* DNA Lab home — 不覆盖主题 token，只叠一层与当前主题一致的径向底 */
+  .mr-lab-shell {
+    color: var(--color-text);
+    background: radial-gradient(
+      ellipse at 30% 0%,
+      color-mix(in srgb, var(--color-primary) 24%, var(--color-background)) 0%,
+      var(--color-background) 58%
+    );
+  }
+
+  .mr-lab-dot-grid {
+    background-image: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-text) 12%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 18px 18px;
+  }
+
+  .mr-lab-scanlines {
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 2px,
+      color-mix(in srgb, var(--color-text) 6%, transparent) 2px,
+      color-mix(in srgb, var(--color-text) 6%, transparent) 3px
+    );
+  }
+
+  .mr-lab-glow-accent {
+    text-shadow:
+      0 0 10px color-mix(in srgb, var(--color-accent) 55%, transparent),
+      0 0 2px var(--color-accent);
+  }
+
+  .mr-lab-glow-electric {
+    text-shadow:
+      0 0 10px color-mix(in srgb, var(--color-electric) 55%, transparent),
+      0 0 2px var(--color-electric);
+  }
+
+  @keyframes mr-lab-pulse-soft {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.55;
+    }
+  }
+
+  .mr-lab-pulse {
+    animation: mr-lab-pulse-soft 1.6s ease-in-out infinite;
+  }
+
+  @keyframes mr-lab-float-y {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  .mr-lab-float {
+    animation: mr-lab-float-y 3.6s ease-in-out infinite;
+  }
+
+  @keyframes mr-lab-dna-spin {
+    from {
+      transform: rotateY(0deg);
+    }
+    to {
+      transform: rotateY(360deg);
+    }
+  }
+
+  .mr-lab-dna-spin {
+    animation: mr-lab-dna-spin 18s linear infinite;
+    transform-style: preserve-3d;
+    transform-origin: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mr-lab-pulse,
+    .mr-lab-float,
+    .mr-lab-dna-spin {
+      animation: none !important;
+    }
+  }
 }

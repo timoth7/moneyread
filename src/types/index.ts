@@ -55,7 +55,7 @@ export interface CustomCategory {
 
 export interface UserSettings {
   currency: string
-  theme: 'signature' | 'light' | 'dark'
+  theme: 'signature' | 'light' | 'dark' | 'lab'
   language: 'en' | 'zh'
   monthlyBudget?: number
   /** Daily expense cap in fen; null/undefined = off */

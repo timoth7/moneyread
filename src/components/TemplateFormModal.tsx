@@ -85,7 +85,7 @@ export function TemplateFormModal({
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-[500] flex items-end justify-center bg-black/50 p-4 sm:items-center"
+          className="fixed inset-0 z-[500] flex cursor-pointer items-end justify-center bg-black/65 p-4 backdrop-blur-md sm:items-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -95,7 +95,7 @@ export function TemplateFormModal({
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 20, opacity: 0 }}
-            className="max-h-[90dvh] w-full max-w-md overflow-y-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-2xl"
+            className="max-h-[90dvh] w-full max-w-md cursor-default overflow-y-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-2xl ring-1 ring-black/10 backdrop-blur-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-[var(--color-text)]">
@@ -126,7 +126,7 @@ export function TemplateFormModal({
               <button
                 type="button"
                 onClick={() => setType('expense')}
-                className={`flex-1 rounded-xl py-2 text-sm font-semibold ${
+                className={`flex-1 cursor-pointer rounded-xl py-2 text-sm font-semibold ${
                   type === 'expense' ? 'bg-[var(--color-hot)]/15 text-[var(--color-hot)]' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)]'
                 }`}
               >
@@ -135,7 +135,7 @@ export function TemplateFormModal({
               <button
                 type="button"
                 onClick={() => setType('income')}
-                className={`flex-1 rounded-xl py-2 text-sm font-semibold ${
+                className={`flex-1 cursor-pointer rounded-xl py-2 text-sm font-semibold ${
                   type === 'income' ? 'bg-[var(--color-electric)]/15 text-[var(--color-electric)]' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)]'
                 }`}
               >
@@ -150,7 +150,7 @@ export function TemplateFormModal({
                   key={c.key}
                   type="button"
                   onClick={() => setCategory(c.key)}
-                  className={`rounded-full px-3 py-1.5 text-xs font-medium ${
+                  className={`cursor-pointer rounded-full px-3 py-1.5 text-xs font-medium ${
                     categorySafe === c.key ? 'bg-[var(--color-primary)] text-white' : 'bg-[var(--color-background)] text-[var(--color-text)]'
                   }`}
                 >
@@ -179,7 +179,7 @@ export function TemplateFormModal({
                       onClose()
                     }
                   }}
-                  className="rounded-xl border border-[var(--color-hot)] px-4 py-2.5 text-sm font-semibold text-[var(--color-hot)]"
+                  className="cursor-pointer rounded-xl border border-[var(--color-hot)] px-4 py-2.5 text-sm font-semibold text-[var(--color-hot)]"
                 >
                   {t.delete}
                 </button>
@@ -187,7 +187,7 @@ export function TemplateFormModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-xl border border-[var(--color-border)] px-4 py-2.5 text-sm font-semibold text-[var(--color-text-secondary)]"
+                className="cursor-pointer rounded-xl border border-[var(--color-border)] px-4 py-2.5 text-sm font-semibold text-[var(--color-text-secondary)]"
               >
                 {s.common.cancel}
               </button>
@@ -195,7 +195,7 @@ export function TemplateFormModal({
                 type="button"
                 disabled={atMax}
                 onClick={handleSave}
-                className="flex-1 rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-40"
+                className="flex-1 cursor-pointer rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {t.save}
               </button>

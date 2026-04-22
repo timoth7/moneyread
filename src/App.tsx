@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AppDataProvider } from './context/AppDataContext'
 import { MainLayout } from './components/layout/MainLayout'
 
+const LabHome = lazy(() => import('./pages/LabHome').then((m) => ({ default: m.LabHome })))
 const Dashboard = lazy(() => import('./pages/Dashboard').then((m) => ({ default: m.Dashboard })))
 const Records = lazy(() => import('./pages/Records').then((m) => ({ default: m.Records })))
 const Wishes = lazy(() => import('./pages/Wishes').then((m) => ({ default: m.Wishes })))
@@ -21,7 +22,8 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<MainLayout />}>
-            <Route index element={<Dashboard />} />
+            <Route index element={<LabHome />} />
+            <Route path="home-classic" element={<Dashboard />} />
             <Route path="records" element={<Records />} />
             <Route path="wishes" element={<Wishes />} />
             <Route path="wishes/new" element={<WishNew />} />

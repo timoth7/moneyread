@@ -76,12 +76,13 @@ export function Profile() {
 
       <section className="mt-8 rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] p-5 shadow-sm">
         <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-[var(--color-text)]">{s.profile.theme}</h2>
-        <div className="mt-3 grid grid-cols-3 gap-3">
+        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {(
             [
               ['signature', s.profile.themeSignature],
               ['light', s.profile.themeLight],
               ['dark', s.profile.themeDark],
+              ['lab', s.profile.themeLab],
             ] as const
           ).map(([key, label]) => {
             const t = themes[key]

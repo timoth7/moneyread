@@ -56,7 +56,7 @@ export function ImpactConfirmButton({ type, disabled, label, onConfirm }: Props)
         type="button"
         disabled={disabled}
         onClick={handleClick}
-        className="relative flex h-[52px] w-full max-w-sm items-center justify-center overflow-hidden rounded-xl font-semibold text-white shadow-lg disabled:opacity-40"
+        className="relative flex h-[52px] w-full max-w-sm cursor-pointer items-center justify-center overflow-hidden rounded-xl font-semibold text-white shadow-lg outline-none transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:ring-2 focus-visible:ring-white/40"
         style={{ background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%)' }}
         animate={
           phase === 'anim'

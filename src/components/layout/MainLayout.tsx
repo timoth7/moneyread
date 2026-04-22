@@ -1,5 +1,5 @@
-import { Home, List, Target, User } from 'lucide-react'
-import { Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { Dna, Home, List, Target, User } from 'lucide-react'
+import { Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import type { RecordItem } from '../../types'
 import { RouteFallback } from '../RouteFallback'
@@ -15,8 +15,6 @@ import { TemplateFormModal } from '../TemplateFormModal'
 import { getStrings } from '../../constants/strings'
 import { loadOnboardingComplete } from '../../utils/storage'
 
-const ringOnboarding = 'ring-4 ring-[var(--color-solar)] ring-offset-2 ring-offset-[var(--color-background)] z-[200]'
-
 export function MainLayout() {
   const location = useLocation()
   const mainScrollRef = useRef<HTMLElement>(null)
@@ -25,11 +23,20 @@ export function MainLayout() {
   const [onboardingStep, setOnboardingStep] = useState(0)
   const [recordForTemplate, setRecordForTemplate] = useState<Omit<RecordItem, 'id' | 'createdAt'> | null>(null)
   const [saveTemplateModalOpen, setSaveTemplateModalOpen] = useState(false)
+  /** 连续相同金额（分）记账次数，满 3 次才提示存为模板 */
+  const templateAmountStreakRef = useRef<{ fen: number | null; n: number }>({ fen: null, n: 0 })
+
+  const clearTemplateHint = useCallback(() => {
+    setRecordForTemplate(null)
+    templateAmountStreakRef.current = { fen: null, n: 0 }
+  }, [])
 
   useLayoutEffect(() => {
     const el = mainScrollRef.current
     if (el) el.scrollTop = 0
   }, [location.pathname])
+
+  const labHomeShell = location.pathname === '/'
 
   const {
     addRecord,
@@ -56,9 +63,9 @@ export function MainLayout() {
 
   useEffect(() => {
     if (!recordForTemplate) return
-    const t = window.setTimeout(() => setRecordForTemplate(null), 8000)
+    const t = window.setTimeout(() => clearTemplateHint(), 8000)
     return () => clearTimeout(t)
-  }, [recordForTemplate])
+  }, [recordForTemplate, clearTemplateHint])
 
   const showOnboarding = onboardingStep >= 1
   const fabHi = showOnboarding && onboardingStep === 2
@@ -74,23 +81,56 @@ export function MainLayout() {
     { to: '/profile', icon: User, label: s.nav.profile },
   ]
 
+  const sidebarTabs = labHomeShell
+    ? [
+        { to: '/', icon: Home, label: s.nav.home },
+        { to: '/records', icon: List, label: s.nav.records },
+        { to: '/wishes', icon: Target, label: s.nav.wishes },
+        { to: '/profile/dna', icon: Dna, label: s.labHome.navDna },
+        { to: '/profile', icon: User, label: s.nav.profile },
+      ]
+    : tabs
+
+  const xpPerLevel = 20
+  const levelN = Math.floor(records.length / xpPerLevel) + 1
+  const xpInLevel = records.length % xpPerLevel
+  const xpMeterPct = (xpInLevel / xpPerLevel) * 100
+
+  const ringOnboarding =
+    'ring-4 ring-[var(--color-solar)] ring-offset-2 ring-offset-[var(--color-background)] z-[200]'
+
   return (
-    <div className="min-h-dvh w-full bg-[var(--color-background)]">
-      <div className="pointer-events-none fixed left-1/2 top-20 z-0 h-20 w-20 -translate-x-[200px] bg-[var(--color-primary)]/5 [clip-path:polygon(50%_0,100%_50%,50%_100%,0_50%)]" />
-      <div className="pointer-events-none fixed left-1/2 top-40 z-0 h-16 w-16 translate-x-[140px] bg-[var(--color-accent)]/10 [clip-path:polygon(0_0,100%_20%,85%_100%,0_85%)]" />
+    <div className={`min-h-dvh w-full bg-[var(--color-background)]`}>
+      {!labHomeShell && (
+        <>
+          <div className="pointer-events-none fixed left-1/2 top-20 z-0 h-20 w-20 -translate-x-[200px] bg-[var(--color-primary)]/5 [clip-path:polygon(50%_0,100%_50%,50%_100%,0_50%)]" />
+          <div className="pointer-events-none fixed left-1/2 top-40 z-0 h-16 w-16 translate-x-[140px] bg-[var(--color-accent)]/10 [clip-path:polygon(0_0,100%_20%,85%_100%,0_85%)]" />
+        </>
+      )}
       <div className="relative mx-auto flex min-h-dvh w-full max-w-[1280px]">
-        <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 border-r border-[var(--color-border)] bg-[var(--color-background)]/90 px-5 py-6 backdrop-blur md:flex md:flex-col">
-          <p className="font-[family-name:var(--font-display)] text-2xl font-bold text-[var(--color-primary)]">
-            moneyread
-          </p>
-          <div className="mt-8 space-y-2">
-            {tabs.map(({ to, icon: Icon, label }) => (
+        <aside
+          className={`sticky top-0 hidden h-dvh w-64 shrink-0 border-r px-5 py-6 backdrop-blur md:flex md:flex-col ${
+            labHomeShell
+              ? 'border-[var(--color-border)] bg-[var(--color-surface)]/95'
+              : 'border-[var(--color-border)] bg-[var(--color-background)]/90'
+          }`}
+        >
+          <p className="font-[family-name:var(--font-display)] text-2xl font-bold text-[var(--color-primary)]">moneyread</p>
+          <div className="mt-8 space-y-1">
+            {sidebarTabs.map(({ to, icon: Icon, label }) => (
               <NavLink
                 key={to}
                 to={to}
                 className={({ isActive }) => {
                   const hi = (wishesHi && to === '/wishes') || (profileHi && to === '/profile')
-                  return `flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                  if (labHomeShell) {
+                    return `flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition ${
+                      isActive
+                        ? 'bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-electric)] text-white'
+                        : 'text-[var(--color-text-secondary)] hover:bg-[color-mix(in_srgb,var(--color-text)_6%,var(--color-surface))]'
+                    } ${hi ? ringOnboarding : ''}`
+                  }
+                  return `flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold transition ${
                     isActive ? 'bg-[var(--color-primary)] text-white' : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)]'
                   } ${hi ? ringOnboarding : ''}`
                 }}
@@ -100,12 +140,29 @@ export function MainLayout() {
               </NavLink>
             ))}
           </div>
+          {labHomeShell && (
+            <div className="mt-6 rounded-xl border border-[var(--color-border)] p-3">
+              <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">
+                <span>
+                  {s.labHome.level} {levelN}
+                </span>
+                <span className="font-[family-name:var(--font-mono)] tabular-nums">
+                  {xpInLevel}/{xpPerLevel}
+                </span>
+              </div>
+              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--color-text)_10%,var(--color-background))]">
+                <div className="h-full rounded-full bg-[var(--color-electric)]" style={{ width: `${xpMeterPct}%` }} />
+              </div>
+            </div>
+          )}
           <button
             type="button"
             onClick={() => setSheetOpen(true)}
-            className={`mt-auto flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-light)] px-4 py-3 font-semibold text-white shadow-lg ${
-              fabHi ? ringOnboarding : ''
-            }`}
+            className={
+              labHomeShell
+                ? `mt-auto flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-[var(--color-border)] bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-electric)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm outline-none transition hover:brightness-110 focus-visible:ring-2 focus-visible:ring-[var(--color-electric)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] ${fabHi ? ringOnboarding : ''}`
+                : `mt-auto flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-light)] px-4 py-3 font-semibold text-white shadow-lg outline-none transition hover:brightness-105 focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 ${fabHi ? ringOnboarding : ''}`
+            }
           >
             <span className="text-xl leading-none">+</span>
             {s.recordForm.addRecord}
@@ -114,7 +171,9 @@ export function MainLayout() {
 
         <main
           ref={mainScrollRef}
-          className="relative min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto pb-[calc(64px+env(safe-area-inset-bottom))] md:pb-8"
+          className={`relative min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto pb-[calc(64px+env(safe-area-inset-bottom))] md:pb-8 ${
+            labHomeShell ? 'mr-lab-shell min-h-0 bg-transparent' : ''
+          }`}
         >
           <Suspense fallback={<RouteFallback />}>
             <PageTransition>
@@ -124,14 +183,24 @@ export function MainLayout() {
         </main>
       </div>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-[100] mx-auto flex h-16 w-full items-end justify-between border-t border-[var(--color-border)] bg-[var(--color-background)] px-2 pb-[env(safe-area-inset-bottom)] shadow-[0_-2px_12px_rgba(0,0,0,0.04)] md:hidden">
+      <nav
+        className={`fixed bottom-0 left-0 right-0 z-[100] mx-auto flex h-16 w-full items-end justify-between border-t px-2 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_24px_rgba(0,0,0,0.08)] backdrop-blur-md md:hidden ${
+          labHomeShell ? 'border-[var(--color-border)] bg-[var(--color-surface)]/95' : 'border-[var(--color-border)] bg-[var(--color-background)]'
+        }`}
+      >
         {tabs.slice(0, 2).map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
             to={to}
             className={({ isActive }) =>
-              `flex flex-1 flex-col items-center gap-1 rounded-xl py-2 text-xs font-medium ${
-                isActive ? 'text-[var(--color-primary)]' : 'text-[#9CA3AF]'
+              `flex flex-1 cursor-pointer flex-col items-center gap-1 rounded-xl py-2 text-xs font-medium ${
+                labHomeShell
+                  ? isActive
+                    ? 'text-[var(--color-electric)]'
+                    : 'text-[var(--color-text-secondary)]'
+                  : isActive
+                    ? 'text-[var(--color-primary)]'
+                    : 'text-[var(--color-text-secondary)]'
               }`
             }
           >
@@ -153,9 +222,11 @@ export function MainLayout() {
           <button
             type="button"
             onClick={() => setSheetOpen(true)}
-            className={`absolute bottom-[calc(12px+env(safe-area-inset-bottom)*0.3)] flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-light)] text-white shadow-lg transition active:scale-95 active:rotate-90 ${
-              fabHi ? ringOnboarding : ''
-            }`}
+            className={`absolute bottom-[calc(12px+env(safe-area-inset-bottom)*0.3)] flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border text-white shadow-lg outline-none transition hover:brightness-110 active:scale-95 active:rotate-90 focus-visible:ring-2 focus-visible:ring-[var(--color-electric)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] ${
+              labHomeShell
+                ? 'border-[var(--color-border)] bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-electric)]'
+                : 'border-transparent bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-light)] focus-visible:ring-[var(--color-primary)]'
+            } ${fabHi ? ringOnboarding : ''}`}
             aria-label={s.recordForm.addRecord}
           >
             <span className="text-2xl font-light leading-none">+</span>
@@ -168,9 +239,14 @@ export function MainLayout() {
             to={to}
             className={({ isActive }) => {
               const hi = (wishesHi && to === '/wishes') || (profileHi && to === '/profile')
-              return `flex flex-1 flex-col items-center gap-1 rounded-xl py-2 text-xs font-medium ${
-                isActive ? 'text-[var(--color-primary)]' : 'text-[#9CA3AF]'
-              } ${hi ? ringOnboarding : ''}`
+              const activeCls = labHomeShell
+                ? isActive
+                  ? 'text-[var(--color-electric)]'
+                  : 'text-[var(--color-text-secondary)]'
+                : isActive
+                  ? 'text-[var(--color-primary)]'
+                  : 'text-[var(--color-text-secondary)]'
+              return `flex flex-1 cursor-pointer flex-col items-center gap-1 rounded-xl py-2 text-xs font-medium ${activeCls} ${hi ? ringOnboarding : ''}`
             }}
           >
             {({ isActive }) => (
@@ -189,19 +265,21 @@ export function MainLayout() {
       </nav>
 
       {recordForTemplate && quickTemplates.length < 8 && (
-        <div className="fixed bottom-[calc(72px+env(safe-area-inset-bottom))] left-0 right-0 z-[110] flex justify-center px-4 md:bottom-8">
-          <div className="flex max-w-md items-center gap-2 rounded-full border border-[var(--color-primary)]/40 bg-[var(--color-surface)] px-4 py-2 shadow-lg">
+        <div className="pointer-events-none fixed bottom-[calc(72px+env(safe-area-inset-bottom))] left-0 right-0 z-[110] flex justify-center px-4 md:bottom-8">
+          <div
+            className="pointer-events-auto flex max-w-md items-center gap-2 rounded-full border border-[var(--color-primary)]/40 bg-[var(--color-surface)] px-4 py-2 shadow-lg backdrop-blur-md"
+          >
             <button
               type="button"
-              className="text-sm font-semibold text-[var(--color-primary)]"
+              className="cursor-pointer text-sm font-semibold text-[var(--color-primary)]"
               onClick={() => setSaveTemplateModalOpen(true)}
             >
               {s.dashboard.saveAsTemplate}
             </button>
             <button
               type="button"
-              className="text-xs text-[var(--color-text-secondary)]"
-              onClick={() => setRecordForTemplate(null)}
+              className="cursor-pointer text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
+              onClick={clearTemplateHint}
               aria-label={s.common.cancel}
             >
               ✕
@@ -219,7 +297,19 @@ export function MainLayout() {
           window.setTimeout(() => setToast(null), 2000)
         }}
         onAfterSubmit={(data) => {
-          if (quickTemplates.length < 8) setRecordForTemplate(data)
+          if (quickTemplates.length >= 8) return
+          const fen = data.amount
+          const st = templateAmountStreakRef.current
+          if (st.fen === fen) {
+            st.n += 1
+          } else {
+            st.fen = fen
+            st.n = 1
+          }
+          if (st.n >= 3) {
+            setRecordForTemplate(data)
+            templateAmountStreakRef.current = { fen: null, n: 0 }
+          }
         }}
       />
 
@@ -231,10 +321,11 @@ export function MainLayout() {
         templateCount={quickTemplates.length}
         onClose={() => {
           setSaveTemplateModalOpen(false)
-          setRecordForTemplate(null)
+          clearTemplateHint()
         }}
         onSave={(t) => {
           addQuickTemplate(t)
+          clearTemplateHint()
         }}
       />
 

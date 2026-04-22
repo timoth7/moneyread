@@ -1,4 +1,4 @@
-export type ThemeKey = 'signature' | 'light' | 'dark'
+export type ThemeKey = 'signature' | 'light' | 'dark' | 'lab'
 
 export const themes: Record<ThemeKey, Record<string, string>> = {
   signature: {
@@ -42,5 +42,20 @@ export const themes: Record<ThemeKey, Record<string, string>> = {
     '--color-electric': '#5CEAFF',
     '--color-solar': '#FBBF24',
     '--color-border': '#2D2D44',
+  },
+  /** DNA Lab — dark violet shell, lime / cyan accents */
+  lab: {
+    '--color-primary': '#6C2BD9',
+    '--color-primary-light': '#8B5CF6',
+    '--color-primary-dark': '#4C1D95',
+    '--color-accent': '#BFFF00',
+    '--color-background': '#0A0F1E',
+    '--color-surface': '#12182A',
+    '--color-text': '#F8FAFC',
+    '--color-text-secondary': '#94A3B8',
+    '--color-hot': '#FF3366',
+    '--color-electric': '#00D4FF',
+    '--color-solar': '#FFB800',
+    '--color-border': 'rgba(255,255,255,0.08)',
   },
 }

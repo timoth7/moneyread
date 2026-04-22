@@ -116,7 +116,7 @@ function RecordSheetBody({
     <>
       <motion.button
         type="button"
-        className="fixed inset-0 z-[140] bg-black/35 backdrop-blur-[2px]"
+        className="fixed inset-0 z-[140] cursor-pointer bg-black/65 backdrop-blur-md"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -124,7 +124,7 @@ function RecordSheetBody({
         aria-label={s.recordForm.close}
       />
       <motion.div
-        className="fixed inset-x-0 bottom-0 z-[150] mx-auto max-w-[430px] rounded-t-2xl bg-[var(--color-background)] shadow-[0_-8px_32px_rgba(0,0,0,0.12)] md:bottom-auto md:left-1/2 md:right-auto md:top-1/2 md:w-[min(620px,calc(100vw-2rem))] md:max-w-none md:-translate-x-1/2 md:-translate-y-1/2 md:overflow-hidden md:rounded-2xl"
+        className="fixed inset-x-0 bottom-0 z-[150] mx-auto max-w-[430px] rounded-t-2xl border border-[var(--color-border)] bg-[var(--color-background)] shadow-[0_-8px_32px_rgba(0,0,0,0.12)] ring-1 ring-black/10 backdrop-blur-xl md:bottom-auto md:left-1/2 md:right-auto md:top-1/2 md:w-[min(620px,calc(100vw-2rem))] md:max-w-none md:-translate-x-1/2 md:-translate-y-1/2 md:overflow-hidden md:rounded-2xl"
         initial={{ y: '100%', scale: 0.98 }}
         animate={{ y: 0 }}
         exit={{ y: '100%', scale: 0.98 }}
@@ -137,14 +137,14 @@ function RecordSheetBody({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full p-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)]"
+            className="cursor-pointer rounded-full p-2 text-[var(--color-text-secondary)] outline-none hover:bg-[var(--color-surface)] focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]"
           >
             <X size={22} />
           </button>
         </div>
         <div className="max-h-[min(78vh,640px)] overflow-y-auto px-5 pb-8 pt-4 md:max-h-[calc(90vh-84px)] md:px-6">
           <label className="block text-center">
-            <span className="mb-2 block text-xs font-medium uppercase tracking-wider text-[#9CA3AF]">
+            <span className="mb-2 block text-xs font-medium uppercase tracking-wider text-[var(--color-text-secondary)]">
               {s.recordForm.amount}
             </span>
             <motion.div
@@ -155,7 +155,7 @@ function RecordSheetBody({
                 ref={inputRef}
                 type="text"
                 inputMode="decimal"
-                className="w-full border-none bg-transparent text-center font-[family-name:var(--font-mono)] text-4xl font-bold text-[var(--color-text)] outline-none placeholder:text-[#D1D5DB]"
+                className="w-full border-none bg-transparent text-center font-[family-name:var(--font-mono)] text-4xl font-bold text-[var(--color-text)] outline-none placeholder:text-[var(--color-text-secondary)]"
                 placeholder="0.00"
                 value={amountStr}
                 onInput={(e) => {
@@ -181,7 +181,7 @@ function RecordSheetBody({
                 setType('expense')
                 setCategory(EXPENSE_CATEGORIES[0].key)
               }}
-              className={`rounded-full px-6 py-2 text-sm font-semibold transition ${
+              className={`cursor-pointer rounded-full px-6 py-2 text-sm font-semibold outline-none transition focus-visible:ring-2 focus-visible:ring-[var(--color-hot)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] ${
                 type === 'expense' ? 'bg-[var(--color-hot)] text-white shadow-md' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)]'
               }`}
             >
@@ -193,7 +193,7 @@ function RecordSheetBody({
                 setType('income')
                 setCategory(INCOME_CATEGORIES[0].key)
               }}
-              className={`rounded-full px-6 py-2 text-sm font-semibold transition ${
+              className={`cursor-pointer rounded-full px-6 py-2 text-sm font-semibold outline-none transition focus-visible:ring-2 focus-visible:ring-[var(--color-electric)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] ${
                 type === 'income' ? 'bg-[var(--color-electric)] text-[var(--color-text)] shadow-md' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)]'
               }`}
             >
@@ -211,8 +211,8 @@ function RecordSheetBody({
                   key={c.key}
                   type="button"
                   onClick={() => setCategory(c.key)}
-                  className={`flex flex-col items-center gap-2 rounded-2xl border-2 py-3 transition ${
-                    sel ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/5' : 'border-transparent bg-[var(--color-surface)]'
+                  className={`flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 py-3 outline-none transition hover:border-[var(--color-primary)]/30 focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] ${
+                    sel ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/5 shadow-[inset_0_0_0_1px_rgba(108,43,217,0.25)]' : 'border-transparent bg-[var(--color-surface)]'
                   }`}
                 >
                   <span
@@ -242,7 +242,7 @@ function RecordSheetBody({
             <span className="mb-1 block text-sm font-semibold text-[var(--color-text)]">{s.recordForm.date}</span>
             <input
               type="date"
-              className="w-full rounded-xl border border-[var(--color-border)] px-4 py-3 text-sm outline-none focus:border-[var(--color-primary)]"
+              className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-3 text-sm text-[var(--color-text)] outline-none focus:border-[var(--color-primary)]"
               value={date}
               onChange={(e) => setDate(e.target.value)}
             />
