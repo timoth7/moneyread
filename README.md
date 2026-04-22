@@ -1,21 +1,5 @@
 # Smart Bookkeeping Website
 
-## Team Members
-
-| Full Name    | Student ID |
-| ------------ | ---------- |
-| Gou. Xinyue  | 2037103    |
-| Chen. Yue    | 2363194    |
-| Wang. Zhibin | 2253935    |
-| Zhu. Yuhao   | 2255053    |
-| Xue. Chun    | 2254710    |
-| Zhang. Yifan | 2303106    |
-| Xi. Tian     | 2257428    |
-
-## Devlog
-
-[Smart bookkeeping Website — GitHub Project](https://github.com/users/Yuki-1109/projects/1/views/1)
-
 ---
 
 # React + TypeScript + Vite
