@@ -29,8 +29,9 @@ export default function App() {
             <Route path="wishes/new" element={<WishNew />} />
             <Route path="wishes/:id" element={<WishDetail />} />
             <Route path="achievements" element={<AchievementsPage />} />
+            <Route path="dna" element={<DNAPage />} />
             <Route path="profile" element={<Profile />} />
-            <Route path="profile/dna" element={<DNAPage />} />
+            <Route path="profile/dna" element={<Navigate to="/dna" replace />} />
             <Route path="profile/report" element={<ReportPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

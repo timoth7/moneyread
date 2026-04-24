@@ -36,7 +36,7 @@ export function MainLayout() {
     if (el) el.scrollTop = 0
   }, [location.pathname])
 
-  const labHomeShell = location.pathname === '/'
+  const labHomeShell = location.pathname === '/' || location.pathname === '/dna'
 
   const {
     addRecord,
@@ -81,15 +81,13 @@ export function MainLayout() {
     { to: '/profile', icon: User, label: s.nav.profile },
   ]
 
-  const sidebarTabs = labHomeShell
-    ? [
-        { to: '/', icon: Home, label: s.nav.home },
-        { to: '/records', icon: List, label: s.nav.records },
-        { to: '/wishes', icon: Target, label: s.nav.wishes },
-        { to: '/profile/dna', icon: Dna, label: s.labHome.navDna },
-        { to: '/profile', icon: User, label: s.nav.profile },
-      ]
-    : tabs
+  const sidebarTabs = [
+    { to: '/', icon: Home, label: s.nav.home },
+    { to: '/records', icon: List, label: s.nav.records },
+    { to: '/wishes', icon: Target, label: s.nav.wishes },
+    { to: '/dna', icon: Dna, label: s.labHome.navDna },
+    { to: '/profile', icon: User, label: s.nav.profile },
+  ]
 
   const xpPerLevel = 20
   const levelN = Math.floor(records.length / xpPerLevel) + 1

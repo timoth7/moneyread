@@ -197,7 +197,7 @@ export function LabHome() {
             patternDescription={dna?.description ?? ''}
             footerPrefix={footerPrefix}
             footerHighlight={footerHighlight}
-            dnaTo="/profile/dna"
+            dnaTo="/dna"
             noDnaMessage={lh.noDnaYet}
             helixColors={helixColors}
           />

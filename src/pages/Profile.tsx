@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useAppData } from '../hooks/useAppData'
-import { canGenerateDNA } from '../utils/dna-calculator'
+
 import { themes, type ThemeKey } from '../constants/themes'
 import { Check } from 'lucide-react'
 import { getStrings } from '../constants/strings'
 import { parseYuanInput } from '../utils/money'
 
 export function Profile() {
-  const { records, achievements, dna, settings, setTheme, setLanguage, patchSettings, clearAllData } = useAppData()
+  const { records, achievements, settings, setTheme, setLanguage, patchSettings, clearAllData } = useAppData()
   const [dailyLimitStr, setDailyLimitStr] = useState('')
   const unlocked = achievements.filter((a) => a.unlockedAt).length
   const s = getStrings(settings.language)
@@ -38,19 +38,6 @@ export function Profile() {
       <p className="mt-2 text-sm text-[var(--color-text-secondary)]">{s.profile.subtitle}</p>
 
       <div className="mt-8 space-y-3">
-        <Link
-          to="/profile/dna"
-          className="flex items-center justify-between rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] p-5 shadow-sm"
-        >
-          <div>
-            <p className="font-[family-name:var(--font-display)] text-lg font-bold text-[var(--color-text)]">{s.dna.title}</p>
-            <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
-              {canGenerateDNA(records) ? (dna?.label ?? '...') : `${s.dna.need20}（${s.dna.current} ${records.length}${s.dna.records}）`}
-            </p>
-          </div>
-          <span className="text-2xl">{dna?.emoji ?? '🧬'}</span>
-        </Link>
-
         <Link
           to="/profile/report"
           className="flex items-center justify-between rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] p-5 shadow-sm"
