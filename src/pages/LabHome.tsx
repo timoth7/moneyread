@@ -149,8 +149,6 @@ export function LabHome() {
 
   return (
     <div className="relative px-4 pb-8 pt-[max(12px,env(safe-area-inset-top))] md:px-6 md:pb-10 md:pt-6">
-      <div className="pointer-events-none absolute inset-0 mr-lab-dot-grid opacity-50" aria-hidden />
-
       <div className="relative mb-5 flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-[var(--color-text-secondary)]">{specimenEyebrow}</p>

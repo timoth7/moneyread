@@ -17,16 +17,33 @@ function themeTokens(theme: string) {
   return themes[key]
 }
 
-function Radar({ dims, size = 320 }: { dims: Record<string, number>; size?: number }) {
-  const R = size / 2 - 78
+function Radar({
+  dims,
+  size = 320,
+  compact = false,
+  language = 'en',
+}: {
+  dims: Record<string, number>
+  size?: number
+  compact?: boolean
+  language?: 'en' | 'zh'
+}) {
+  const labelPad = compact ? 52 : 78
+  const R = size / 2 - labelPad
   const cx = size / 2
   const cy = size / 2
-  const axes = [
-    { k: 'frequency', label: 'Frequency', color: DIMENSION_COLORS[0], angle: -Math.PI / 2 },
-    { k: 'concentration', label: 'Concentration', color: DIMENSION_COLORS[1], angle: 0 },
-    { k: 'timePattern', label: 'Time', color: DIMENSION_COLORS[2], angle: Math.PI / 2 },
-    { k: 'volatility', label: 'Volatility', color: DIMENSION_COLORS[3], angle: Math.PI },
+  const axisDefs = [
+    { k: 'frequency', labelEn: 'Frequency', labelZh: '频率', labelShortEn: 'FREQ', labelShortZh: '频次', color: DIMENSION_COLORS[0], angle: -Math.PI / 2 },
+    { k: 'concentration', labelEn: 'Concentration', labelZh: '集中度', labelShortEn: 'CONC', labelShortZh: '集中', color: DIMENSION_COLORS[1], angle: 0 },
+    { k: 'timePattern', labelEn: 'Time', labelZh: '时段', labelShortEn: 'TIME', labelShortZh: '时段', color: DIMENSION_COLORS[2], angle: Math.PI / 2 },
+    { k: 'volatility', labelEn: 'Volatility', labelZh: '波动', labelShortEn: 'VOL', labelShortZh: '波动', color: DIMENSION_COLORS[3], angle: Math.PI },
   ]
+  const axes = axisDefs.map((a) => ({
+    ...a,
+    label: compact
+      ? (language === 'zh' ? a.labelShortZh : a.labelShortEn)
+      : (language === 'zh' ? a.labelZh : a.labelEn),
+  }))
   const pt = (angle: number, r: number): [number, number] => [cx + Math.cos(angle) * r, cy + Math.sin(angle) * r]
   const poly = axes.map((a) => pt(a.angle, ((dims[a.k] ?? 0) / 100) * R)).map(([x, y]) => `${x},${y}`).join(' ')
   const rings = [25, 50, 75, 100]
@@ -64,13 +81,16 @@ function Radar({ dims, size = 320 }: { dims: Record<string, number>; size?: numb
       <polygon points={poly} fill="url(#dnaRadarFill)" stroke="var(--color-accent)" strokeWidth="1.8" filter="url(#dnaGlow)" opacity=".9" />
       <polygon points={poly} fill="none" stroke="var(--color-accent)" strokeWidth="1.5" />
       {axes.map((a) => {
-        const [lx, ly] = pt(a.angle, R + 42)
+        const lblR = R + (compact ? 30 : 42)
+        const [lx, ly] = pt(a.angle, lblR)
+        const fs = compact ? 7.5 : 9
+        const valFs = compact ? 15 : 18
         return (
           <g key={`lbl-${a.k}`}>
-            <text x={lx} y={ly - 6} textAnchor="middle" fontSize="9" fill="rgba(255,255,255,.5)"
+            <text x={lx} y={ly - 5} textAnchor="middle" fontSize={fs} fill="rgba(255,255,255,.5)"
               className="font-[family-name:var(--font-mono)]"
-              style={{ letterSpacing: '.12em', textTransform: 'uppercase' }}>{a.label}</text>
-            <text x={lx} y={ly + 11} textAnchor="middle" fontSize="18" fill={a.color}
+              style={{ letterSpacing: compact ? '.06em' : '.12em', textTransform: 'uppercase' }}>{a.label}</text>
+            <text x={lx} y={ly + (compact ? 9 : 11)} textAnchor="middle" fontSize={valFs} fill={a.color}
               className="font-[family-name:var(--font-mono)]"
               style={{ fontWeight: 700, textShadow: `0 0 10px ${a.color}88` }}>
               {dims[a.k] ?? 0}
@@ -183,21 +203,10 @@ export function DNAPage() {
   const notReady = !canGenerateDNA(records)
 
   return (
-    <div className="relative min-h-[calc(100dvh-64px)]">
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            `radial-gradient(ellipse at 20% 0%, color-mix(in srgb, var(--color-primary-light) 20%, transparent) 0%, transparent 50%), ` +
-            `radial-gradient(ellipse at 80% 30%, color-mix(in srgb, var(--color-electric) 10%, transparent) 0%, transparent 50%)`,
-        }}
-      />
-      <div className="pointer-events-none absolute inset-0 mr-lab-dot-grid opacity-60" />
-      <div className="pointer-events-none absolute inset-0 mr-lab-scanlines opacity-60" />
-
+    <div className="relative min-h-[calc(100dvh-64px)] bg-[var(--color-background)]">
       {/* Header */}
-      <header className="relative flex items-center justify-between gap-4 px-5 pb-4 pt-[max(16px,env(safe-area-inset-top))] md:px-6 md:pt-6">
-        <div className="flex min-w-0 items-center gap-3">
+      <header className="relative flex flex-wrap items-start justify-between gap-3 px-5 pb-4 pt-[max(16px,env(safe-area-inset-top))] md:px-6 md:pt-6">
+        <div className="flex min-w-0 flex-1 items-center gap-3">
           <button
             type="button"
             onClick={() => (window.history.length > 1 ? navigate(-1) : navigate('/'))}
@@ -205,11 +214,16 @@ export function DNAPage() {
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M15 18l-6-6 6-6" /></svg>
           </button>
-          <div className="min-w-0">
-            <div className="whitespace-nowrap font-[family-name:var(--font-mono)] text-[9px] font-bold uppercase tracking-[0.25em] text-[var(--color-text-secondary)]">
-              {monthLabel} {seqCode && <>· SEQ {seqCode}</>}
+          <div className="min-w-0 flex-1">
+            <div className="break-words font-[family-name:var(--font-mono)] text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--color-text-secondary)]">
+              {monthLabel}
+              {seqCode ? (
+                <span className="mt-0.5 block normal-case tracking-normal text-[var(--color-text-secondary)]">
+                  · SEQ {seqCode}
+                </span>
+              ) : null}
             </div>
-            <h1 className="mt-0.5 whitespace-nowrap font-[family-name:var(--font-display)] text-[22px] font-bold leading-tight text-[var(--color-text)]">
+            <h1 className="mt-1 break-words font-[family-name:var(--font-display)] text-[clamp(1.125rem,4vw,1.375rem)] font-bold leading-snug text-[var(--color-text)]">
               {s.dna.title.split(' ')[0]}{' '}
               <span className="bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-electric)] bg-clip-text italic text-transparent">
                 {s.dna.title.split(' ').slice(1).join(' ') || 'DNA'}
@@ -218,8 +232,8 @@ export function DNAPage() {
           </div>
         </div>
         {dna && (
-          <div className="flex items-center gap-1.5 rounded border border-[var(--color-accent)]/40 bg-[var(--color-accent)]/5 px-2.5 py-1.5 font-[family-name:var(--font-mono)] text-[10px] font-bold text-[var(--color-accent)]">
-            <span className="mr-lab-pulse h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" /> LIVE
+          <div className="flex shrink-0 items-center gap-1.5 rounded border border-[var(--color-accent)]/40 bg-[var(--color-accent)]/5 px-2.5 py-1.5 font-[family-name:var(--font-mono)] text-[10px] font-bold text-[var(--color-accent)]">
+            <span className="mr-lab-pulse h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-accent)]" /> LIVE
           </div>
         )}
       </header>
@@ -250,17 +264,17 @@ export function DNAPage() {
           </div>
         </div>
       ) : (
-        /* 3-panel layout */
+        /* 大屏：左 4/12 人格，右 8/12 为 Live Sequence（上：螺旋+碱基组成，下：基因图谱）；小屏顺序：人格 → 综合卡 */
         <motion.div
-          className="relative grid grid-cols-1 gap-4 px-5 pb-6 md:grid-cols-12 md:px-6"
+          className="relative grid min-w-0 grid-cols-1 gap-4 px-5 pb-6 lg:grid-cols-12 lg:items-start lg:px-6"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
         >
-          {/* LEFT — Pattern card */}
-          <aside className="md:col-span-3">
+          {/* Pattern */}
+          <aside className="order-1 min-w-0 lg:col-span-4 lg:col-start-1 lg:row-start-1">
             <div
-              className="relative overflow-hidden rounded-2xl p-6"
+              className="relative min-w-0 overflow-hidden rounded-2xl p-6"
               style={{
                 background: `linear-gradient(160deg, color-mix(in srgb, var(--color-primary-dark) 60%, var(--color-surface)) 0%, var(--color-surface) 100%)`,
                 border: '1px solid color-mix(in srgb, var(--color-accent) 30%, transparent)',
@@ -270,10 +284,10 @@ export function DNAPage() {
                 {settings.language === 'zh' ? '你的人格' : 'Your Pattern'}
               </div>
               <div className="mr-lab-float my-4 text-6xl">{dna.emoji}</div>
-              <div className="mr-lab-glow-accent font-[family-name:var(--font-display)] text-2xl font-bold leading-tight text-[var(--color-accent)]">
+              <div className="mr-lab-glow-accent break-words text-balance font-[family-name:var(--font-display)] text-xl font-bold leading-snug text-[var(--color-accent)] lg:text-2xl">
                 {dna.label}
               </div>
-              <div className="mt-3 text-[12px] leading-relaxed text-[var(--color-text-secondary)]">
+              <div className="mt-3 break-words text-[12px] leading-relaxed text-[var(--color-text-secondary)]">
                 {dna.description}
               </div>
               <div className="mt-5 flex flex-wrap gap-1.5">
@@ -295,93 +309,93 @@ export function DNAPage() {
             </div>
           </aside>
 
-          {/* CENTER — Helix + Base Pairs */}
-          <section className="md:col-span-6">
+          {/* Live Sequence + Gene Map（同一张大卡，填满右侧视觉重量） */}
+          <section className="order-2 min-w-0 lg:col-span-8 lg:col-start-5 lg:row-start-1">
             <div
-              className="relative h-full overflow-hidden rounded-2xl border border-[var(--color-border)]"
+              className="relative overflow-hidden rounded-2xl border border-[var(--color-border)]"
               style={{
                 background: `radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--color-accent) 12%, transparent), transparent 60%), var(--color-surface)`,
               }}
             >
               <div className="pointer-events-none absolute inset-0 mr-lab-scanlines opacity-60" />
-              <div className="absolute left-4 right-4 top-4 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="mr-lab-pulse h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" />
+              <div className="absolute left-4 right-4 top-4 flex min-w-0 flex-wrap items-center justify-between gap-2">
+                <div className="flex min-w-0 items-center gap-2">
+                  <div className="mr-lab-pulse h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-accent)]" />
                   <span className="font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.25em] text-[var(--color-text-secondary)]">
                     {settings.language === 'zh' ? '实时序列' : 'Live Sequence'}
                   </span>
                 </div>
-                <span className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-text-secondary)]">
+                <span className="shrink-0 font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-text-secondary)]">
                   {records.length} {s.dna.records} · {bases.length} {settings.language === 'zh' ? '碱基' : 'bases'}
                 </span>
               </div>
 
-              <div className="flex flex-col items-center gap-8 p-6 pt-14 md:flex-row">
-                <div className="shrink-0">
-                  <Helix w={240} h={360} colors={helixColors} />
-                </div>
-                <div className="flex-1 space-y-2.5">
-                  <div className="mb-3 font-[family-name:var(--font-mono)] text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--color-text-secondary)]">
-                    {settings.language === 'zh' ? '碱基对组成' : 'Base Pair Composition'}
+              <div className="flex flex-col gap-10 p-6 pb-8 pt-14">
+                <div className="flex flex-col items-stretch gap-8 lg:flex-row lg:items-start">
+                  <div className="flex shrink-0 justify-center lg:justify-start">
+                    <Helix w={240} h={360} colors={helixColors} />
                   </div>
-                  {bases.length === 0 ? (
-                    <p className="text-sm text-[var(--color-text-secondary)]">
-                      {settings.language === 'zh' ? '本月暂无支出记录' : 'No expenses this month yet'}
-                    </p>
-                  ) : (
-                    bases.map((b) => (
-                      <div key={b.key} className="flex items-center gap-2.5">
-                        <div className="h-2 w-2 shrink-0 rounded-full" style={{ background: b.color, boxShadow: `0 0 10px ${b.color}` }} />
-                        <span className="text-base">{b.emoji}</span>
-                        <span className="flex-1 text-[13px] font-semibold text-[var(--color-text)]">{b.key}</span>
-                        <div className="h-1.5 w-20 overflow-hidden rounded-full bg-[var(--color-border)]">
-                          <div className="h-full rounded-full" style={{ width: `${Math.min(100, b.pct * 3)}%`, background: b.color }} />
+                  <div className="min-w-0 flex-1 space-y-2.5">
+                    <div className="mb-3 font-[family-name:var(--font-mono)] text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--color-text-secondary)]">
+                      {settings.language === 'zh' ? '碱基对组成' : 'Base Pair Composition'}
+                    </div>
+                    {bases.length === 0 ? (
+                      <p className="text-sm text-[var(--color-text-secondary)]">
+                        {settings.language === 'zh' ? '本月暂无支出记录' : 'No expenses this month yet'}
+                      </p>
+                    ) : (
+                      bases.map((b) => (
+                        <div key={b.key} className="flex min-w-0 items-center gap-2">
+                          <div className="h-2 w-2 shrink-0 rounded-full" style={{ background: b.color, boxShadow: `0 0 10px ${b.color}` }} />
+                          <span className="shrink-0 text-base">{b.emoji}</span>
+                          <span className="min-w-0 flex-1 basis-0 break-words text-[13px] font-semibold text-[var(--color-text)]">
+                            {b.key}
+                          </span>
+                          <div className="h-1.5 min-w-[4rem] flex-1 overflow-hidden rounded-full bg-[var(--color-border)]">
+                            <div className="h-full rounded-full transition-[width]" style={{ width: `${b.pct}%`, background: b.color }} />
+                          </div>
+                          <span className="w-9 shrink-0 text-right font-[family-name:var(--font-mono)] text-[11px] font-bold tabular-nums" style={{ color: b.color }}>
+                            {b.pct}%
+                          </span>
                         </div>
-                        <span className="w-8 text-right font-[family-name:var(--font-mono)] text-[11px] font-bold" style={{ color: b.color }}>{b.pct}%</span>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                <div className="relative border-t border-[var(--color-border)] pt-8">
+                  <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+                    <div>
+                      <div className="font-[family-name:var(--font-mono)] text-[9px] font-bold uppercase tracking-[0.25em] text-[var(--color-text-secondary)]">
+                        {settings.language === 'zh' ? '四维指标' : '4D Dimensions'}
                       </div>
-                    ))
-                  )}
+                      <div className="mt-1 font-[family-name:var(--font-display)] text-lg font-bold text-[var(--color-text)]">
+                        {settings.language === 'zh' ? '基因图谱' : 'Gene Map'}
+                      </div>
+                    </div>
+                    <div className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-text-secondary)]">0–100</div>
+                  </div>
+                  <div className="flex w-full min-w-0 justify-center overflow-x-auto">
+                    <Radar dims={dna.dimensions} size={320} language={settings.language} />
+                  </div>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* RIGHT — Radar (Gene Map) */}
-          <aside className="md:col-span-3">
-            <div
-              className="relative h-full rounded-2xl border border-[var(--color-border)] p-5"
-              style={{ background: `linear-gradient(150deg, color-mix(in srgb, var(--color-primary-light) 10%, transparent), color-mix(in srgb, var(--color-electric) 3%, transparent))` }}
-            >
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="font-[family-name:var(--font-mono)] text-[9px] font-bold uppercase tracking-[0.25em] text-[var(--color-text-secondary)]">
-                    {settings.language === 'zh' ? '四维指标' : '4D Dimensions'}
-                  </div>
-                  <div className="mt-1 font-[family-name:var(--font-display)] text-lg font-bold text-[var(--color-text)]">
-                    {settings.language === 'zh' ? '基因图谱' : 'Gene Map'}
-                  </div>
-                </div>
-                <div className="font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-text-secondary)]">0–100</div>
-              </div>
-              <div className="mt-2 flex items-center justify-center">
-                <Radar dims={dna.dimensions} size={320} />
-              </div>
-            </div>
-          </aside>
-
-          {/* Refresh button — full-width below panels */}
-          <div className="md:col-span-12">
-            <div className="mx-auto flex max-w-xs items-center justify-center gap-3">
+          {/* Refresh */}
+          <div className="order-3 min-w-0 lg:col-span-12 lg:col-start-1 lg:row-start-2">
+            <div className="mx-auto flex w-full max-w-lg flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-center sm:gap-4">
               <button
                 type="button"
                 disabled={busy}
                 onClick={runRefresh}
-                className="flex cursor-pointer items-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-2.5 font-[family-name:var(--font-mono)] text-sm font-semibold text-[var(--color-primary)] transition hover:bg-[var(--color-primary)]/10 disabled:cursor-wait disabled:opacity-70"
+                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-2.5 font-[family-name:var(--font-mono)] text-sm font-semibold text-[var(--color-primary)] transition hover:bg-[var(--color-primary)]/10 disabled:cursor-wait disabled:opacity-70 sm:w-auto"
               >
                 {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                 {busy ? s.dna.refreshing : s.dna.refresh}
               </button>
-              <span className="font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-text-secondary)]">
+              <span className="text-center font-[family-name:var(--font-mono)] text-[10px] leading-snug text-[var(--color-text-secondary)] sm:max-w-[14rem] sm:text-left">
                 {s.dna.refreshHint}
               </span>
             </div>

@@ -97,6 +97,12 @@ export function MainLayout() {
   const ringOnboarding =
     'ring-4 ring-[var(--color-solar)] ring-offset-2 ring-offset-[var(--color-background)] z-[200]'
 
+  /** 全路由统一的「记一笔」：主色→浅主色渐变，随主题 `--color-primary*` 变化（与 Records 侧栏一致） */
+  const addRecordSidebarClass =
+    'mt-auto flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-light)] px-4 py-3 font-semibold text-white shadow-lg outline-none transition hover:brightness-105 focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]'
+  const addRecordFabClass =
+    'flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border border-transparent bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-light)] text-white shadow-lg outline-none transition hover:brightness-110 active:scale-95 active:rotate-90 focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]'
+
   return (
     <div className={`min-h-dvh w-full bg-[var(--color-background)]`}>
       {!labHomeShell && (
@@ -106,13 +112,7 @@ export function MainLayout() {
         </>
       )}
       <div className="relative mx-auto flex min-h-dvh w-full max-w-[1280px]">
-        <aside
-          className={`sticky top-0 hidden h-dvh w-64 shrink-0 border-r px-5 py-6 backdrop-blur md:flex md:flex-col ${
-            labHomeShell
-              ? 'border-[var(--color-border)] bg-[var(--color-surface)]/95'
-              : 'border-[var(--color-border)] bg-[var(--color-background)]/90'
-          }`}
-        >
+        <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 border-r border-[var(--color-border)] bg-[var(--color-background)]/90 px-5 py-6 backdrop-blur md:flex md:flex-col">
           <p className="font-[family-name:var(--font-display)] text-2xl font-bold text-[var(--color-primary)]">moneyread</p>
           <div className="mt-8 space-y-1">
             {sidebarTabs.map(({ to, icon: Icon, label }) => (
@@ -138,29 +138,23 @@ export function MainLayout() {
               </NavLink>
             ))}
           </div>
-          {labHomeShell && (
-            <div className="mt-6 rounded-xl border border-[var(--color-border)] p-3">
-              <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">
-                <span>
-                  {s.labHome.level} {levelN}
-                </span>
-                <span className="font-[family-name:var(--font-mono)] tabular-nums">
-                  {xpInLevel}/{xpPerLevel}
-                </span>
-              </div>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--color-text)_10%,var(--color-background))]">
-                <div className="h-full rounded-full bg-[var(--color-electric)]" style={{ width: `${xpMeterPct}%` }} />
-              </div>
+          <div className="mt-6 rounded-xl border border-[var(--color-border)] p-3">
+            <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">
+              <span>
+                {s.labHome.level} {levelN}
+              </span>
+              <span className="font-[family-name:var(--font-mono)] tabular-nums">
+                {xpInLevel}/{xpPerLevel}
+              </span>
             </div>
-          )}
+            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--color-text)_10%,var(--color-background))]">
+              <div className="h-full rounded-full bg-[var(--color-electric)]" style={{ width: `${xpMeterPct}%` }} />
+            </div>
+          </div>
           <button
             type="button"
             onClick={() => setSheetOpen(true)}
-            className={
-              labHomeShell
-                ? `mt-auto flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-[var(--color-border)] bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-electric)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm outline-none transition hover:brightness-110 focus-visible:ring-2 focus-visible:ring-[var(--color-electric)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] ${fabHi ? ringOnboarding : ''}`
-                : `mt-auto flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-light)] px-4 py-3 font-semibold text-white shadow-lg outline-none transition hover:brightness-105 focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 ${fabHi ? ringOnboarding : ''}`
-            }
+            className={`${addRecordSidebarClass} ${fabHi ? ringOnboarding : ''}`}
           >
             <span className="text-xl leading-none">+</span>
             {s.recordForm.addRecord}
@@ -169,9 +163,7 @@ export function MainLayout() {
 
         <main
           ref={mainScrollRef}
-          className={`relative min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto pb-[calc(64px+env(safe-area-inset-bottom))] md:pb-8 ${
-            labHomeShell ? 'mr-lab-shell min-h-0 bg-transparent' : ''
-          }`}
+          className="relative min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto bg-[var(--color-background)] pb-[calc(64px+env(safe-area-inset-bottom))] md:pb-8"
         >
           <Suspense fallback={<RouteFallback />}>
             <PageTransition>
@@ -181,11 +173,7 @@ export function MainLayout() {
         </main>
       </div>
 
-      <nav
-        className={`fixed bottom-0 left-0 right-0 z-[100] mx-auto flex h-16 w-full items-end justify-between border-t px-2 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_24px_rgba(0,0,0,0.08)] backdrop-blur-md md:hidden ${
-          labHomeShell ? 'border-[var(--color-border)] bg-[var(--color-surface)]/95' : 'border-[var(--color-border)] bg-[var(--color-background)]'
-        }`}
-      >
+      <nav className="fixed bottom-0 left-0 right-0 z-[100] mx-auto flex h-16 w-full items-end justify-between border-t border-[var(--color-border)] bg-[var(--color-background)] px-2 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_24px_rgba(0,0,0,0.08)] backdrop-blur-md md:hidden">
         {tabs.slice(0, 2).map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
@@ -220,11 +208,7 @@ export function MainLayout() {
           <button
             type="button"
             onClick={() => setSheetOpen(true)}
-            className={`absolute bottom-[calc(12px+env(safe-area-inset-bottom)*0.3)] flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border text-white shadow-lg outline-none transition hover:brightness-110 active:scale-95 active:rotate-90 focus-visible:ring-2 focus-visible:ring-[var(--color-electric)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)] ${
-              labHomeShell
-                ? 'border-[var(--color-border)] bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-electric)]'
-                : 'border-transparent bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-light)] focus-visible:ring-[var(--color-primary)]'
-            } ${fabHi ? ringOnboarding : ''}`}
+            className={`absolute bottom-[calc(12px+env(safe-area-inset-bottom)*0.3)] ${addRecordFabClass} ${fabHi ? ringOnboarding : ''}`}
             aria-label={s.recordForm.addRecord}
           >
             <span className="text-2xl font-light leading-none">+</span>

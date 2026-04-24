@@ -67,7 +67,8 @@ export function calculateSpendingDNA(records: RecordItem[], now = new Date(), lo
   const concWord = concentration > 55 ? (locale === 'zh' ? '专情玩家' : 'Loyal Spender') : (locale === 'zh' ? '雨露均沾' : 'Spread-out')
   const freqWord = frequency > 55 ? (locale === 'zh' ? '随手买买买' : 'Impulse Buyer') : (locale === 'zh' ? '极简主义者' : 'Minimalist')
 
-  const label = `${timeWord}${volWord}${concWord} · ${freqWord}`
+  /** 用间隔符分开四段，避免中英文挤成一行难以阅读 */
+  const label = `${timeWord} · ${volWord} · ${concWord} · ${freqWord}`
   const emoji = catEmoji
 
   const topLabel = getCategoryLabel(locale, topCat)
