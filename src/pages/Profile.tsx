@@ -8,7 +8,7 @@ import { getStrings } from '../constants/strings'
 import { parseYuanInput } from '../utils/money'
 
 export function Profile() {
-  const { records, achievements, settings, setTheme, setLanguage, patchSettings, clearAllData } = useAppData()
+  const { achievements, settings, setTheme, setLanguage, patchSettings, clearAllData } = useAppData()
   const [dailyLimitStr, setDailyLimitStr] = useState('')
   const unlocked = achievements.filter((a) => a.unlockedAt).length
   const s = getStrings(settings.language)
