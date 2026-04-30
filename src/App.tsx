@@ -1,5 +1,6 @@
 import { lazy } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
 import { AppDataProvider } from './context/AppDataContext'
 import { MainLayout } from './components/layout/MainLayout'
 
@@ -36,6 +37,7 @@ export default function App() {
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        <Analytics />
       </BrowserRouter>
     </AppDataProvider>
   )
